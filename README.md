@@ -33,6 +33,9 @@ Medium-term it is expected that this functionality will be part of tilemaker
 change](https://github.com/systemed/tilemaker/pull/292)), and hence
 pre-processing will not be required any more.
 
+You do not **have** to run this program on your input data but if you don't, 
+then the admin boundaries will be incomplete and/or not pretty.
+
 ## See also
 
 * [Tilemaker](https://tilemaker.org/)
