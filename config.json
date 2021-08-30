@@ -1,0 +1,141 @@
+{
+    "layers": {
+        "place_labels": {
+            "minzoom": 3,
+            "maxzoom": 14
+        },
+        "boundaries": {
+            "minzoom": 0,
+            "maxzoom": 10,
+            "simplify_below": 14,
+            "simplify_level": 0.0003,
+            "simplify_ratio": 2,
+            "combine_below": 15
+        },
+        "boundary_labels": {
+            "minzoom": 2,
+            "maxzoom": 10
+        },
+        "addresses": {
+            "minzoom": 14,
+            "maxzoom": 14
+        },
+        "water_lines": {
+            "minzoom": 4,
+            "maxzoom": 14,
+            "simplify_below": 14,
+            "simplify_level": 0.0003,
+            "simplify_ratio": 2,
+	    "combine_below": 15
+        },
+        "water_lines_labels": {
+            "minzoom": 4,
+            "maxzoom": 14,
+            "simplify_below": 14,
+            "simplify_level": 0.0003,
+            "simplify_ratio": 2,
+	    "combine_below": 15
+        },
+        "streets": {
+            "minzoom": 14,
+            "maxzoom": 14,
+            "combine_below": 15
+        },
+        "streets_med": {
+            "minzoom": 11,
+            "maxzoom": 13,
+            "simplify_below": 14,
+            "simplify_level": 0.0002,
+            "combine_below": 14,
+            "write_to": "streets"
+        },
+        "streets_low": {
+            "minzoom": 5,
+            "maxzoom": 10,
+            "simplify_below": 14,
+            "simplify_level": 0.0003,
+            "combine_below": 11,
+            "write_to": "streets"
+        },
+        "street_labels": {
+            "minzoom": 12,
+            "maxzoom": 14,
+            "simplify_below": 14,
+            "simplify_level": 0.0002,
+            "combine_below": 15
+        },
+        "street_labels_points": {
+            "minzoom": 12,
+            "maxzoom": 14
+        },
+        "aerialways": {
+            "minzoom": 12,
+            "maxzoom": 14,
+            "simplify_below": 14,
+            "simplify_level": 0.0003
+        },
+        "public_transport": {
+            "minzoom": 11,
+            "maxzoom": 14
+        },
+        "buildings": {
+            "minzoom": 14,
+            "maxzoom": 14
+        },
+        "water_polygons": {
+            "minzoom": 4,
+            "maxzoom": 14,
+            "simplify_below": 14,
+            "simplify_level": 0.0003,
+            "simplify_ratio": 2
+        },
+        "ocean": {
+            "minzoom": 0,
+            "maxzoom": 14,
+            "source": "data/water-polygons-split-4326/water_polygons.shp",
+	    "source_columns": true,
+            "simplify_below": 14,
+            "simplify_level": 0.0001,
+            "simplify_ratio": 2
+        },
+        "water_polygons_labels": {
+            "minzoom": 14,
+            "maxzoom": 14
+        },
+        "land": {
+            "minzoom": 7,
+            "maxzoom": 14,
+            "simplify_below": 14,
+            "simplify_level": 0.0003,
+            "simplify_ratio": 2
+        },
+        "sites": {
+            "minzoom": 14,
+            "maxzoom": 14
+        }
+    },
+    "settings": {
+        "minzoom": 0,
+        "maxzoom": 14,
+        "basezoom": 14,
+        "include_ids": false,
+        "combine_below": 14,
+        "name": "Tilemaker to Geofabrik Vector Tiles schema",
+        "version": "3.0",
+        "description": "Tile config for simple vector tiles schema",
+        "compress": "gzip",
+        "filemetadata": {
+            "tilejson": "2.0.0",
+            "scheme": "xyz",
+            "type": "baselayer",
+            "format": "pbf",
+            "tiles": [
+                "https://example.com/liechtenstein/{z}/{x}/{y}.pbf"
+            ]
+        },
+        "metadata": {
+          "author": "OpenStreetMap contributors, Geofabrik GmbH",
+          "license": "Open Database License 1.0"
+        }
+    }
+}
