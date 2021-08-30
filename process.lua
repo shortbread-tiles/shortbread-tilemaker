@@ -554,7 +554,7 @@ function way_function(way)
 		process_water_polygons(way)
 	end
 	-- Layers water_lines, water_lines_labels
-	if not are and way:Holds("waterway") then
+	if not area and way:Holds("waterway") then
 		process_water_lines(way)
 	end
 
