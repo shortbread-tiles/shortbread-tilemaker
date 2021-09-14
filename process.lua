@@ -337,9 +337,41 @@ function process_sites(way)
 	end
 end
 
-function process_boundary(way)
+function process_boundary_labels(way)
+	if not way:Find("type") == "boundary" then
+		return
+	end
+	if not way:Holds("name") then
+		return
+	end
 	local area = way:Area()
 	if area == 0 then
+		return
+	end
+	local mz = inf_zoom
+	local admin_level = tonumber(way:Find("admin_level"))
+	if admin_level == nil then
+		return
+	end
+	if admin_level == 2 and area >= 2 * 10^12 then
+		mz = 2
+	elseif (admin_level == 2 or admin_level == 4) and area >= 7 * 10^11 then
+		mz = 3
+	elseif (admin_level == 2 or admin_level == 4) and area >= 1 * 10^11 then
+		mz = 4
+	elseif admin_level == 2 or admin_level == 4 then
+		mz = 5
+	end
+	if mz < inf_zoom then
+		way:LayerAsCentroid("boundary_labels")
+		way:MinZoom(mz)
+		setNameAttributes(way)
+		way:Attribute("admin_level", admin_level)
+	end
+end
+
+function process_boundary_lines(way)
+	if way:Holds("type") then
 		return
 	end
 	local mz = inf_zoom
@@ -353,25 +385,10 @@ function process_boundary(way)
 	elseif admin_level == 4 then
 		mz = 7
 	end
-	if admin_level == 2 and area >= 2 * 10^12 then
-		mzLabel = 2
-	elseif (admin_level == 2 or admin_level == 4) and area >= 7 * 10^11 then
-		mzLabel = 3
-	elseif (admin_level == 2 or admin_level == 4) and area >= 1 * 10^11 then
-		mzLabel = 4
-	elseif admin_level == 2 or admin_level == 4 then
-		mzLabel = 5
-	end
 	if mz < inf_zoom then
 		way:Layer("boundaries", false)
 		way:MinZoom(mz)
 		way:Attribute("admin_level", admin_level)
-		if way:Holds("name") then
-			way:LayerAsCentroid("boundary_labels")
-			way:MinZoom(mzLabel)
-			setNameAttributes(way)
-			way:Attribute("admin_level", admin_level)
-		end
 	end
 end
 
@@ -569,8 +586,9 @@ function way_function(way)
 	end
 
 	-- Layer boundaries
-	if area and (way:Find("boundary") == "administrative") then
-		process_boundary(way)
+	if way:Find("boundary") == "administrative" then
+		process_boundary_lines(way)
+		process_boundary_labels(way)
 	end
 
 	-- Layer streets, street_labels
