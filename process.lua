@@ -10,7 +10,7 @@ end
 
 -- Process node tags
 
-node_keys = { "place", "highway", "railway", "aeroway", "addr:housenumber", "addr:housename" }
+node_keys = { "place", "highway", "railway", "aeroway", "aerialway", "addr:housenumber", "addr:housename" }
 
 inf_zoom = 99
 
@@ -169,7 +169,8 @@ function node_function(node)
 	-- Layer public_transport 
 	local railway = node:Find("railway")
 	local aeroway = node:Find("aeroway")
-	if railway == "station" or railway == "halt" or aeroway == "aerodrome" then
+	local aerialway = node:Find("aerialway")
+	if railway == "station" or railway == "halt" or aeroway == "aerodrome" or aerialway == "station" then
 		process_public_transport_layer(node, false)
 	end
 
