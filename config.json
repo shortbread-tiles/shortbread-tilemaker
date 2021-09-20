@@ -6,7 +6,7 @@
         },
         "boundaries": {
             "minzoom": 0,
-            "maxzoom": 10,
+            "maxzoom": 14,
             "simplify_below": 14,
             "simplify_level": 0.0003,
             "simplify_ratio": 2,
@@ -14,7 +14,7 @@
         },
         "boundary_labels": {
             "minzoom": 2,
-            "maxzoom": 10
+            "maxzoom": 14
         },
         "addresses": {
             "minzoom": 14,
