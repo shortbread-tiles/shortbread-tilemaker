@@ -1,0 +1,75 @@
+{
+    "tilestats": {
+        "layerCount": 17,
+        "layers": [
+            {
+                "layer": "place_labels",
+                "geometry": "Point"
+            },
+            {
+                "layer": "boundaries",
+                "geometry": "LineString"
+            },
+            {
+                "layer": "boundary_labels",
+                "geometry": "Point"
+            },
+            {
+                "layer": "addresses",
+                "geometry": "Point"
+            },
+            {
+                "layer": "water_lines",
+                "geometry": "LineString"
+            },
+            {
+                "layer": "water_lines_labels",
+                "geometry": "LineString"
+            },
+            {
+                "layer": "streets",
+                "geometry": "LineString"
+            },
+            {
+                "layer": "street_labels",
+                "geometry": "LineString"
+            },
+            {
+                "layer": "street_label_points",
+                "geometry": "Point"
+            },
+            {
+                "layer": "aerialways",
+                "geometry": "LineString"
+            },
+            {
+                "layer": "public_transport",
+                "geometry": "Point"
+            },
+            {
+                "layer": "buildings",
+                "geometry": "Polygon"
+            },
+            {
+                "layer": "water_polygons",
+                "geometry": "Polgon"
+            },
+            {
+                "layer": "ocean",
+                "geometry": "Polygon"
+            },
+            {
+                "layer": "water_polygons_labels",
+                "geometry": "Point"
+            },
+            {
+                "layer": "land",
+                "geometry": "Polygon"
+            },
+            {
+                "layer": "sites",
+                "geometry": "Polygon"
+            }
+        ]
+    }
+}
