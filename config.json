@@ -53,7 +53,7 @@
             "minzoom": 5,
             "maxzoom": 10,
             "simplify_below": 14,
-            "simplify_level": 0.0003,
+            "simplify_level": 0.0002,
             "combine_below": 11,
             "write_to": "streets"
         },
