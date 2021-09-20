@@ -118,6 +118,7 @@ function process_place_layer(node)
 		local populationNum = tonumber(population)
 		if populationNum ~= nil then
 			node:AttributeNumeric("population", populationNum)
+		        node:SortableNumber(population)
 		end
 	end
 end
@@ -368,6 +369,9 @@ function process_boundary_labels(way)
 		way:MinZoom(mz)
 		setNameAttributes(way)
 		way:Attribute("admin_level", admin_level)
+		-- way_area is in ha, not m² due to 32-bit limit
+		way:AttributeNumeric("way_area", area / 10000)
+		way:SortableNumber(area / 10000)
 	end
 end
 
