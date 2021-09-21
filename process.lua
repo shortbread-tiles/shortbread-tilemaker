@@ -24,6 +24,17 @@ function fillWithFallback(value1, value2, value3)
 	return value3
 end
 
+-- Ensure that
+function ensureSortableNumberInRange(number)
+	local limit = 2 ^ 32 - 1
+	if number >= limit then
+		return limit
+	elseif number < 0 then
+		return 0
+	end
+	return number
+end
+
 -- Set name, name_en, and name_de on any object
 function setNameAttributes(obj)
 	local name = obj:Find("name")
@@ -118,7 +129,7 @@ function process_place_layer(node)
 		local populationNum = tonumber(population)
 		if populationNum ~= nil then
 			node:AttributeNumeric("population", populationNum)
-		        node:SortableNumber(populationNum)
+		        node:SortableNumber(ensureSortableNumberInRange(populationNum))
 		end
 	end
 end
@@ -371,7 +382,7 @@ function process_boundary_labels(way)
 		way:Attribute("admin_level", admin_level)
 		-- way_area is in ha, not m² due to 32-bit limit
 		way:AttributeNumeric("way_area", area / 10000)
-		way:SortableNumber(area / 10000)
+		way:SortableNumber(ensureSortableNumberInRange(area / 10000))
 	end
 end
 
