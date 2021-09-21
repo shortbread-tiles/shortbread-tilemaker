@@ -118,7 +118,7 @@ function process_place_layer(node)
 		local populationNum = tonumber(population)
 		if populationNum ~= nil then
 			node:AttributeNumeric("population", populationNum)
-		        node:SortableNumber(population)
+		        node:SortableNumber(populationNum)
 		end
 	end
 end
