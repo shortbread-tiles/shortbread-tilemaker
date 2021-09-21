@@ -566,23 +566,22 @@ function process_addresses(way, is_area)
 end
 
 function way_function(way)
-	area = way:Area() > 0
 	-- Layers water_polygons, water_polygons_labels
-	if area and (way:Holds("waterway") or way:Holds("natural") or way:Holds("landuse")) then
+	if way:Holds("waterway") or way:Holds("natural") or way:Holds("landuse") then
 		process_water_polygons(way)
 	end
 	-- Layers water_lines, water_lines_labels
-	if not area and way:Holds("waterway") then
+	if way:Holds("waterway") then
 		process_water_lines(way)
 	end
 
 	-- Layer land
-	if area and (way:Holds("landuse") or way:Holds("natural") or way:Holds("wetland") or way:Find("amenity") == "grave_yard" or way:Holds("leisure") or way:Find("man_made") == "pier") then
+	if way:Holds("landuse") or way:Holds("natural") or way:Holds("wetland") or way:Find("amenity") == "grave_yard" or way:Holds("leisure") or way:Find("man_made") == "pier" then
 		process_land(way)
 	end
 
 	-- Layer sites
-	if area and (way:Holds("amenity") or way:Holds("leisure") or way:Holds("military") or way:Holds("landuse")) then
+	if way:Holds("amenity") or way:Holds("leisure") or way:Holds("military") or way:Holds("landuse") then
 		process_sites(way)
 	end
 
@@ -593,32 +592,32 @@ function way_function(way)
 	end
 
 	-- Layer streets, street_labels
-	if not area and (way:Holds("highway")  or way:Holds("railway") or way:Holds("aeroway")) then
+	if way:Holds("highway")  or way:Holds("railway") or way:Holds("aeroway") then
 		process_streets(way)
 		-- process_street_labels(way)
 	end
 	
 	-- Layer aerialways
-	if not area and way:Holds("aerialway") then
+	if way:Holds("aerialway") then
 		process_aerialways(way)
 	end
 
 	-- Layer public_transport 
 	local railway = way:Find("railway")
 	local aeroway = way:Find("aeroway")
-	if area and (railway == "station" or railway == "halt" or aeroway == "aerodrome") then
+	if railway == "station" or railway == "halt" or aeroway == "aerodrome" then
 		process_public_transport_layer(way, true)
 	end
 
 	-- Layer buildings
-	if area and way:Holds("building") then
+	if way:Holds("building") then
 		process_buildings(way)
 	end
 
 	-- Layer addresses
 	local housenumber = way:Find("addr:housenumber")
 	local housename = way:Find("addr:housename")
-	if area and (housenumber ~= "" or housename ~= "") then
+	if (housenumber ~= "" or housename ~= "") then
 		process_addresses(way, true)
 	end
 end
