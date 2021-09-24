@@ -17,14 +17,17 @@ args = parser.parse_args()
 
 # Read input file
 input_data = json.load(args.input_file)
-try:
-    # Double json.load because the field "json" is JSON encoded as string
+if "json" in input_data:
+    # vector_layers as encoded JSON – this is the metadata.json written by mbutil
     json_data = json.loads(input_data["json"])
-except KeyError as e:
-    sys.stderr.write("Cannot find member 'json' in input metadata.json file\n")
+elif "vector_layers" in input_data:
+    # vector_layers as JSON attribute – this is the metadata.json written by Tilemaker
+    json_data = {"vector_layers": input_data["vector_layers"], "tilestats": input_data.get("tilestats", {})}
+else:
+    sys.stderr.write("Cannot find member 'json' or 'vector_layers' in input metadata.json file\n")
     exit(1)
 
-if "tilestats" not in json_data:
+if "tilestats" not in json_data or json_data["tilestats"] == {}:
     # Read tilestats_file
     tilestats = json.load(args.tilestats_file)
     if "tilestats" not in tilestats:
@@ -41,5 +44,7 @@ else:
     sys.stderr.write("Ignoring tilestats file because input file contains a tilestats property already\n")
 
 input_data["json"] = json.dumps(json_data)
+input_data.pop("vector_layers", None)
+input_data.pop("tilestats", None)
 
 sys.stdout.write(json.dumps(input_data))
