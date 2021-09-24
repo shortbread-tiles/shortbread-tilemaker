@@ -533,23 +533,30 @@ function process_streets(way)
 		way:Layer("streets_low", false)
 		way:MinZoom(mz)
 		way:Attribute("kind", kind)
-		way:Attribute("name", name)
 		setNameAttributes(way)
 		way:AttributeBoolean("rail", rail)
 		setZOrder(way, rail)
 	end
 end
 
--- function process_street_labels(way)
--- 	local highway = way:Find("highway")
--- 	local ref = way:Find("ref")
--- 	if ref ~= "" and (highway == "motorway" or highway == "trunk" or highway == "primary" or highway == "secondary") then
--- 		way:Layer("street_labels", false)
--- 		way:MinZoom(12)
--- 		way:Attribute("kind", highway)
--- 		way:Attribute("ref", ref)
--- 	end
--- end
+function process_street_labels(way)
+	local highway = way:Find("highway")
+	local ref = way:Find("ref")
+	local mz = inf_zoom
+	if highway == "motorway" then
+		mz = 11
+	elseif highway == "trunk" or highway == "primary" then
+		mz = 12
+	elseif highway == "secondary" or highway == "tertiary" then
+		mz = 13
+	end
+	if ref ~= "" and mz < inf_zoom then
+		way:Layer("street_labels", false)
+		way:MinZoom(mz)
+		way:Attribute("kind", highway)
+		way:Attribute("ref", ref)
+	end
+end
 
 function process_aerialways(way)
 	local aerialway = way:Find("aerialway")
@@ -609,7 +616,7 @@ function way_function(way)
 	-- Layer streets, street_labels
 	if way:Holds("highway")  or way:Holds("railway") or way:Holds("aeroway") then
 		process_streets(way)
-		-- process_street_labels(way)
+		process_street_labels(way)
 	end
 	
 	-- Layer aerialways
