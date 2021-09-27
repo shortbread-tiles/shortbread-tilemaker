@@ -35,7 +35,7 @@
                 "geometry": "LineString"
             },
             {
-                "layer": "street_label_points",
+                "layer": "street_labels_points",
                 "geometry": "Point"
             },
             {
@@ -52,7 +52,7 @@
             },
             {
                 "layer": "water_polygons",
-                "geometry": "Polgon"
+                "geometry": "Polygon"
             },
             {
                 "layer": "ocean",
