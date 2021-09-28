@@ -507,7 +507,6 @@ function process_streets(way)
 		way:Attribute("surface", surface)
 		way:AttributeBoolean("tunnel", tunnelBool)
 		way:AttributeBoolean("bridge", bridgeBool)
-		setNameAttributes(way)
 		way:Attribute("tracktype", way:Find("tracktype"))
 		way:AttributeBoolean("rail", rail)
 		way:Attribute("service", way:Find("service"))
@@ -523,7 +522,6 @@ function process_streets(way)
 		way:Attribute("horse", horse)
 		way:AttributeBoolean("tunnel", tunnelBool)
 		way:AttributeBoolean("bridge", bridgeBool)
-		setNameAttributes(way)
 		way:Attribute("tracktype", way:Find("tracktype"))
 		way:AttributeBoolean("rail", rail)
 		way:Attribute("service", way:Find("service"))
@@ -533,7 +531,6 @@ function process_streets(way)
 		way:Layer("streets_low", false)
 		way:MinZoom(mz)
 		way:Attribute("kind", kind)
-		setNameAttributes(way)
 		way:AttributeBoolean("rail", rail)
 		setZOrder(way, rail)
 	end
@@ -542,19 +539,48 @@ end
 function process_street_labels(way)
 	local highway = way:Find("highway")
 	local ref = way:Find("ref")
+	local name = way:Find("name")
 	local mz = inf_zoom
+	local kind = ""
 	if highway == "motorway" then
 		mz = 11
+		kind = highway
 	elseif highway == "trunk" or highway == "primary" then
 		mz = 12
+		kind = highway
 	elseif highway == "secondary" or highway == "tertiary" then
 		mz = 13
+		kind = highway
+	elseif highway == "motorway_link" then
+		mz = 13
+		kind = "motorway"
+		link = true
+	elseif highway == "trunk_link" then
+		mz = 13
+		kind = "trunk"
+		link = true
+	elseif highway == "primary_link" then
+		mz = 13
+		kind = "primary"
+		link = true
+	elseif highway == "secondary_link" then
+		mz = 13
+		kind = "secondary"
+		link = true
+	elseif highway == "tertiary_link" then
+		mz = 14
+		kind = "tertiary"
+		link = true
+	elseif highway == "unclassified" or highway == "residential" or highway == "living_street" or highway == "pedestrian" or highway == "track" or highway == "service" or highway == "footway" or highway == "steps" or highway == "path" or highway == "cycleway" then
+		mz = 14
+		kind = highway
 	end
-	if ref ~= "" and mz < inf_zoom then
+	if (name ~= "" or ref ~= "") and mz < inf_zoom then
 		way:Layer("street_labels", false)
 		way:MinZoom(mz)
 		way:Attribute("kind", highway)
 		way:Attribute("ref", ref)
+		setNameAttributes(way)
 	end
 end
 
