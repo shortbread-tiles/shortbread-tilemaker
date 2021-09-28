@@ -74,19 +74,19 @@ function setZOrder(way, is_rail)
 		hwClass = 12
 	elseif not is_rail and (israilway == "subway" or railway == "light_rail" or railway == "tram" or railway == "funicular" or railway == "monorail") then
 		hwClass = 11
-	elseif highway == "motorway" or highway == "motorway_link" then
+	elseif highway == "motorway" then
 		hwClass = 10
-	elseif highway == "trunk" or highway == "trunk_link" then
+	elseif highway == "trunk"  then
 		hwClass = 9
-	elseif highway == "primary" or highway == "primary_link" then
+	elseif highway == "primary"  then
 		hwClass = 8
-	elseif highway == "secondary" or highway == "secondary_link" then
+	elseif highway == "secondary"  then
 		hwClass = 7
-	elseif highway == "tertiary" or highway == "tertiary_link" then
+	elseif highway == "tertiary"  then
 		hwClass = 6
-	elseif highway == "unclassified" or highway == "residential" then
+	elseif highway == "unclassified" or highway == "residential" or highway == "road" or highway == "motorway_link" or highway == "trunk_link" or highway == "primary_link" or highway == "secondary_link" or highway == "tertiary_link" then
 		hwClass = 5
-	elseif highway == "road" or highway == "living_street" or highway == "pedestrian" then
+	elseif highway == "living_street" or highway == "pedestrian" then
 		hwClass = 4
 	elseif highway == "service" then
 		hwClass = 3
