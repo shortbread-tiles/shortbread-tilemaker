@@ -423,6 +423,7 @@ function process_streets(way)
 	local tunnelBool = false
 	local covered = way:Find("covered")
 	local bridge = way:Find("bridge")
+	local service = way:Find("service")
 	local bridgeBool = false
 	local name = way:Find("name")
 	local rail = false
@@ -458,11 +459,11 @@ function process_streets(way)
 			mz = 13
 			kind = highway
 		end
-	elseif (railway == "rail" or railway == "narrow_gauge") and not way:Holds("service") then
+	elseif (railway == "rail" or railway == "narrow_gauge") and service == "" then
 		kind = railway
 		rail = true
 		mz = 8
-	elseif ((railway == "rail" or railway == "narrow_gauge") and way:Holds("service"))
+	elseif ((railway == "rail" or railway == "narrow_gauge") and service ~= "")
 		or railway == "light_rail" or railway == "tram" or railway == "subway"
 		or railway == "funicular" or railway == "monorail" then
 		kind = railway
@@ -507,9 +508,13 @@ function process_streets(way)
 		way:Attribute("surface", surface)
 		way:AttributeBoolean("tunnel", tunnelBool)
 		way:AttributeBoolean("bridge", bridgeBool)
-		way:Attribute("tracktype", way:Find("tracktype"))
+		if tracktype ~= "" then
+			way:Attribute("tracktype", tracktype)
+		end
 		way:AttributeBoolean("rail", rail)
-		way:Attribute("service", way:Find("service"))
+		if service ~= "" then
+			way:Attribute("service", service)
+		end
 		setZOrder(way, rail)
 	end
 	if mz < inf_zoom then
@@ -522,9 +527,13 @@ function process_streets(way)
 		way:Attribute("horse", horse)
 		way:AttributeBoolean("tunnel", tunnelBool)
 		way:AttributeBoolean("bridge", bridgeBool)
-		way:Attribute("tracktype", way:Find("tracktype"))
+		if tracktype ~= "" then
+			way:Attribute("tracktype", tracktype)
+		end
 		way:AttributeBoolean("rail", rail)
-		way:Attribute("service", way:Find("service"))
+		if service ~= "" then
+			way:Attribute("service", service)
+		end
 		setZOrder(way, rail)
 	end
 	if mz < 9 then
