@@ -412,6 +412,20 @@ function process_boundary_lines(way)
 	end
 end
 
+function toTunnelBool(tunnel, covered)
+	if tunnel == "yes" or tunnel == "building_passage" or covered == "yes" then
+		return true
+	end
+	return false
+end
+
+function toBridgeBool(bridge)
+	if bridge == "yes" then
+		return true
+	end
+	return false
+end
+
 function process_streets(way)
 	local min_zoom_layer = 5
 	local mz = inf_zoom
@@ -420,15 +434,13 @@ function process_streets(way)
 	local railway = way:Find("railway")
 	local aeroway = way:Find("aeroway")
 	local surface = way:Find("surface")
-	local tunnel = way:Find("tunnel")
 	local bicycle = way:Find("bicycle")
 	local horse = way:Find("horse")
 	local tracktype = way:Find("tracktype")
-	local tunnelBool = false
+	local tunnelBool = toTunnelBool(way:Find("tunnel"), way:Find("covered"))
 	local covered = way:Find("covered")
-	local bridge = way:Find("bridge")
 	local service = way:Find("service")
-	local bridgeBool = false
+	local bridgeBool = toBridgeBool(way:Find("bridge"))
 	local name = way:Find("name")
 	local rail = false
 	if name == "" then
@@ -480,23 +492,13 @@ function process_streets(way)
 		kind = aeroway
 		mz = 13
 	end
-	if kind ~= "" and (surface ~= "" or tunnel ~= "" or bridge ~= "") then
+	if kind ~= "" and surface ~= "" then
 		if surface == "unpaved" or surface == "compacted" or surface == "dirt" or surface == "earth" or surface == "fine_gravel" or surface == "grass" or surface == "grass_paver" or surface == "gravel" or surface == "ground" or surface == "mud" or surface == "pebblestone" or surface == "salt" or surface == "woodchips" or surface == "clay" then
 			suface = "unpaved"
 		elseif surface == "paved" or surface == "asphalt" or surface == "cobblestone" or surface == "cobblestone:flattended" or surface == "sett" or surface == "concrete" or surface == "concrete:lanes" or surface == "concrete:plates" or surface == "paving_stones" then
 			suface = "unpaved"
 		else
 			surface = ""
-		end
-		if tunnel == "yes" or tunnel == "building_passage" or covered == "yes" then
-			tunnelBool = true
-		else
-			tunnelBool = false
-		end
-		if bridge == "yes" then
-			bridgeBool = true
-		else
-			bridgeBool = false
 		end
 	end
 	local link = (highway == "motorway_link" or highway == "trunk_link" or highway == "primary_link" or highway == "secondary_link" or highway == "tertiary_link")
@@ -597,6 +599,37 @@ function process_street_labels(way)
 	end
 end
 
+function process_street_polygons(way)
+	local highway = way:Find("highway")
+	local surface = way:Find("surface")
+	local service = way:Find("service")
+	local kind = nil
+	local mz = inf_zoom
+	if highway == "pedestrian" or highway == "service" then
+		mz = 14
+		kind = highway
+	end
+	if mz < inf_zoom then
+		way:Layer("street_polygons", true)
+		way:MinZoom(mz)
+		way:Attribute("kind", kind)
+		if surface ~= "" then
+			way:Attribute("surface", surface)
+		end
+		way:AttributeBoolean("tunnel", toTunnelBool(way:Find("tunnel"), way:Find("covered")))
+		way:AttributeBoolean("bridge", toBridgeBool(way:Find("bridge")))
+		way:AttributeBoolean("rail", false)
+		if service ~= "" then
+			way:Attribute("service", service)
+		end
+		setZOrder(way, rail)
+		way:LayerAsCentroid("street_polygons_labels")
+		setNameAttributes(way)
+		way:Attribute("kind", kind)
+		way:MinZoom(mz)
+	end
+end
+
 function process_aerialways(way)
 	local aerialway = way:Find("aerialway")
 	if aerialway == "cable_car" or aerialway == "gondola" or aerialway == "chair_lift" or aerialway == "drag_lift" or aerialway == "t-bar" or aerialway == "j-bar" or aerialway == "platter" or aerialway == "rope_tow" then
@@ -653,9 +686,15 @@ function way_function(way)
 	end
 
 	-- Layer streets, street_labels
-	if way:Holds("highway")  or way:Holds("railway") or way:Holds("aeroway") then
+	local area = way:Area()
+	if area == 0 and (way:Holds("highway") or way:Holds("railway") or way:Holds("aeroway")) then
 		process_streets(way)
 		process_street_labels(way)
+	end
+
+	-- Layer street_polygons, street_polygons_labels
+	if area > 0 and way:Holds("highway") then
+		process_street_polygons(way)
 	end
 	
 	-- Layer aerialways
