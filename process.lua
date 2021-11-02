@@ -158,7 +158,7 @@ function process_public_transport_layer(obj, is_area)
 	end
 	obj:MinZoom(11)
 	obj:Attribute("kind", kind)
-	local iata = way:Find("iata")
+	local iata = obj:Find("iata")
 	if iata ~= "" then
 		obj:Attribute("iata", iata)
 	end
