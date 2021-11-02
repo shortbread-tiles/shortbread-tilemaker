@@ -46,17 +46,15 @@ function setNameAttributes(obj)
 end
 
 -- Set z_order
-function setZOrder(way, is_rail)
+function setZOrder(way, is_rail, ignore_bridge)
 	local highway = way:Find("highway")
 	local railway = way:Find("highway")
 	local layer = tonumber(way:Find("layer"))
-	local bridge = way:Find("bridge")
-	local tunnel = way:Find("tunnel")
 	local zOrder = 0
 	local Z_STEP = 14
-	if bridge ~= "" and bridge ~= "no" then
+	if not ignore_bridges and toBridgeBool(way) then
 		zOrder = zOrder + Z_STEP
-	elseif tunnel ~= "" and tunnel ~= "no" then
+	elseif toTunnelBool(way) then
 		zOrder = zOrder - Z_STEP
 	end
 	if not (layer == nil) then
@@ -521,7 +519,7 @@ function process_streets(way)
 		if service ~= "" then
 			way:Attribute("service", service)
 		end
-		setZOrder(way, rail)
+		setZOrder(way, rail, false)
 	end
 	if mz < inf_zoom then
 		way:Layer("streets", false)
@@ -540,14 +538,14 @@ function process_streets(way)
 		if service ~= "" then
 			way:Attribute("service", service)
 		end
-		setZOrder(way, rail)
+		setZOrder(way, rail, false)
 	end
 	if mz < 9 then
 		way:Layer("streets_low", false)
 		way:MinZoom(mz)
 		way:Attribute("kind", kind)
 		way:AttributeBoolean("rail", rail)
-		setZOrder(way, rail)
+		setZOrder(way, rail, false)
 	end
 end
 
@@ -615,6 +613,7 @@ function process_street_labels(way)
 		way:Attribute("ref_rows", rows)
 		way:Attribute("ref_cols", cols)
 		setNameAttributes(way)
+		setZOrder(way, false, true)
 	end
 end
 
@@ -641,7 +640,7 @@ function process_street_polygons(way)
 		if service ~= "" then
 			way:Attribute("service", service)
 		end
-		setZOrder(way, rail)
+		setZOrder(way, rail, false)
 		way:LayerAsCentroid("street_polygons_labels")
 		setNameAttributes(way)
 		way:Attribute("kind", kind)
