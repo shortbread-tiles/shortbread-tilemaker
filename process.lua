@@ -641,7 +641,7 @@ function process_street_polygons(way)
 			way:Attribute("service", service)
 		end
 		setZOrder(way, rail, false)
-		way:LayerAsCentroid("street_polygons_labels")
+		way:LayerAsCentroid("streets_polygons_labels")
 		setNameAttributes(way)
 		way:Attribute("kind", kind)
 		way:MinZoom(mz)
