@@ -67,7 +67,7 @@
             "write_to": "streets"
         },
         "street_labels": {
-            "minzoom": 11,
+            "minzoom": 10,
             "maxzoom": 14,
             "simplify_below": 14,
             "simplify_level": 0.0002,
