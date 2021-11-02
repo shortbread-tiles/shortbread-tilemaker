@@ -558,7 +558,7 @@ function process_street_labels(way)
 	local mz = inf_zoom
 	local kind = ""
 	if highway == "motorway" then
-		mz = 11
+		mz = 10
 		kind = highway
 	elseif highway == "trunk" or highway == "primary" then
 		mz = 12
@@ -590,11 +590,30 @@ function process_street_labels(way)
 		mz = 14
 		kind = highway
 	end
-	if (name ~= "" or ref ~= "") and mz < inf_zoom then
+	local refs = ""
+	local rows = 0
+	local cols = 0
+	if mz < inf_zoom and ref ~= "" then
+		for word in string.gmatch(ref, "([^;]+);?") do
+			rows = rows + 1
+			cols = math.max(cols, string.len(word))
+			if rows == 1 then
+				refs = word
+			else
+				refs = refs .. "\n" .. word
+			end
+		end
+	elseif mz >= inf_zoom then
+		return
+	end
+	if (name ~= "" or refs ~= "") then
 		way:Layer("street_labels", false)
 		way:MinZoom(mz)
 		way:Attribute("kind", highway)
-		way:Attribute("ref", ref)
+		way:Attribute("tunnel", toTunnelBool(way))
+		way:Attribute("ref", refs)
+		way:Attribute("ref_rows", rows)
+		way:Attribute("ref_cols", cols)
 		setNameAttributes(way)
 	end
 end
