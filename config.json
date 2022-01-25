@@ -8,7 +8,7 @@
             "minzoom": 0,
             "maxzoom": 14,
             "simplify_below": 14,
-            "simplify_level": 0.0003,
+            "simplify_level": 0.0002,
             "simplify_ratio": 2,
             "combine_below": 15
         },
@@ -24,7 +24,7 @@
             "minzoom": 4,
             "maxzoom": 14,
             "simplify_below": 14,
-            "simplify_level": 0.0003,
+            "simplify_level": 0.0002,
             "simplify_ratio": 2,
 	    "combine_below": 15
         },
@@ -32,7 +32,7 @@
             "minzoom": 4,
             "maxzoom": 14,
             "simplify_below": 14,
-            "simplify_level": 0.0003,
+            "simplify_level": 0.0002,
             "simplify_ratio": 2,
 	    "combine_below": 15
         },
@@ -95,7 +95,7 @@
             "minzoom": 4,
             "maxzoom": 14,
             "simplify_below": 14,
-            "simplify_level": 0.0003,
+            "simplify_level": 0.0002,
             "simplify_ratio": 2
         },
         "ocean": {
