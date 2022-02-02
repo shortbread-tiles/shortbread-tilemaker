@@ -101,12 +101,47 @@ function process_place_layer(node)
 	local place = node:Find("place")
 	local mz = 99
 	local kind = place
+	local population = node:Find("population")
 	if place == "city" then
 		mz = 6
+		if population == "" then
+			population = "100000"
+		end
 	elseif place == "town" then
 		mz = 7
-	elseif place == "village" or place == "hamlet" or place == "suburb" or place == "neighbourhood" or place == "locality" or place == "isolated_dwelling" or place == "farm" or place == "island" then
+		if population == "" then
+			population = "5000"
+		end
+	elseif place == "village" then
 		mz = 10
+		if population == "" then
+			population = "100"
+		end
+	elseif place == "hamlet" then
+		mz = 10
+		if population == "" then
+			population = "50"
+		end
+	elseif place == "suburb" then
+		mz = 10
+		if population == "" then
+			population = "1000"
+		end
+	elseif place == "neighbourhood" then
+		mz = 10
+		if population == "" then
+			population = "100"
+		end
+	elseif place == "locality" or place == "island" then
+		mz = 10
+		if population == "" then
+			population = "0"
+		end
+	elseif  place == "isolated_dwelling" or place == "farm"  then
+		mz = 10
+		if population == "" then
+			population = "5"
+		end
 	end
 	if (place == "city" or place == "town" or place == "village" or place == "hamlet") and node:Holds("capital") then
 		local capital = node:Find("capital")
@@ -123,7 +158,6 @@ function process_place_layer(node)
 		node:MinZoom(mz)
 		node:Attribute("kind", kind)
 		setNameAttributes(node)
-		local population = node:Find("population")
 		local populationNum = tonumber(population)
 		if populationNum ~= nil then
 			node:AttributeNumeric("population", populationNum)
