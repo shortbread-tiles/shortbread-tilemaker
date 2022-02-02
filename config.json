@@ -110,7 +110,7 @@
         "ocean-low": {
             "minzoom": 0,
             "maxzoom": 7,
-            "source": "data/simplified-water-polygons-complete-4326/ocean-simplified-complete-4326.shp",
+            "source": "data/simplified-water-polygons-split-4326/simplified_water_polygons.shp",
 	    "source_columns": true,
             "simplify_below": 14,
             "simplify_level": 0.0001,
