@@ -426,21 +426,35 @@ function process_boundary_lines(way)
 	if way:Holds("type") then
 		return
 	end
-	local mz = inf_zoom
-	local mzLabel = inf_zoom
-	local admin_level = tonumber(way:Find("admin_level"))
-	if admin_level == nil then
-		return
+	local min_admin_level = 99
+	while true do
+		local rel = way:NextRelation()
+		if not rel and min_admin_level == 99 then
+			return
+		elseif not rel then
+			break
+		end
+		local admin_level = way:FindInRelation("admin_level")
+		local boundary = way:FindInRelation("boundary")
+		local al = 99
+		if admin_level ~= "" and boundary == "administrative" then
+			al = tonumber(admin_level)
+		end
+		if al ~= nil and al >= 2 then
+			min_admin_level = math.min(min_admin_level, al)
+		end
 	end
-	if admin_level == 2 then
+
+	local mz = inf_zoom
+	if min_admin_level == 2 then
 		mz = 0
-	elseif admin_level == 4 then
+	elseif min_admin_level <= 4 then
 		mz = 7
 	end
 	if mz < inf_zoom then
 		way:Layer("boundaries", false)
 		way:MinZoom(mz)
-		way:Attribute("admin_level", admin_level)
+		way:AttributeNumeric("admin_level", min_admin_level)
 	end
 end
 
@@ -735,9 +749,9 @@ function way_function(way)
 
 	-- Layer boundaries
 	if way:Find("boundary") == "administrative" then
-		process_boundary_lines(way)
 		process_boundary_labels(way)
 	end
+	process_boundary_lines(way)
 
 	-- Layer streets, street_labels
 	local area = way:Area()
@@ -774,4 +788,32 @@ function way_function(way)
 	if (housenumber ~= "" or housename ~= "") then
 		process_addresses(way, true)
 	end
+end
+
+---- Accept boundary relations
+function relation_scan_function(relation)
+	if relation:Find("boundary") == "administrative" then
+		admin_level = relation:Find("admin_level")
+		if admin_level == "2" or admin_level == "3" or admin_level == "4" then
+			relation:Accept()
+		end
+	end
+end
+
+-- Filter shape file attributes
+function attribute_function(attr, layer)
+	attributes = {}
+	if layer == "ocean" then
+		attributes = {}
+		attributes["x"] = 0
+		attributes["y"] = 0
+		return attributes
+	end
+	if layer == "ocean-low" then
+		attributes = {}
+		attributes["x"] = 0
+		attributes["y"] = 0
+		return attributes
+	end
+	return attr
 end
