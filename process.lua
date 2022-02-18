@@ -792,7 +792,7 @@ end
 
 ---- Accept boundary relations
 function relation_scan_function(relation)
-	if relation:Find("boundary") == "administrative" then
+	if relation:Find("type") == "boundary" and relation:Find("boundary") == "administrative" then
 		admin_level = relation:Find("admin_level")
 		if admin_level == "2" or admin_level == "3" or admin_level == "4" then
 			relation:Accept()
