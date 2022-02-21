@@ -297,7 +297,10 @@ function process_water_lines(way)
 	elseif kind == "canal" then
 		mz = 12
 		mz_label = 14
-	elseif kind == "ditch" or kind == "stream" then
+	elseif kind == "drain" or kind == "stream" then
+		mz = 13
+		mz_label = 14
+	elseif kind == "ditch" then
 		mz = 14
 		mz_label = 14
 	end
