@@ -1,47 +1,10 @@
-# Geofabrik Basic Vector Tiles - Tilemaker Configuration
+# Shortbread Vector Tiles – Tilemaker Configuration
 
-## Installation
+This Git repository contains the Tilemaker configuration files in order to produce
+vector tiles in the Shortbread schema.
 
-* Install [tilemaker](https://tilemaker.org/) as normal.
-* Install the Geofabrik [Admin Boundary Simplification](https://github.com/geofabrik/admin-polygon-simplify) tool.
-* Run `./get-shapefiles.sh` once to download external shapefiles.
-
-## Generating tiles
-
-* Preprocess OSM Data to improve admin border ways:
-
-	  osm_admin_level_rels2ways path/to/originaldata.osm.pbf processeddata.osm.pbf
-
-* Generate Vector Tiles:
-
-	  tilemaker --input processeddata.osm.pbf --output output.mbtiles
-
-[Documentation on tile schema](https://github.com/geofabrik/geofabrik-basicvt-docs)
-
-## Dependencies
-
-For administrative boundaries, this tile generation mechanism currently depends
-on individual OSM ways being tagged with minimum `admin_level` of all
-`boundary=administrative` relations they are a member of. This is in order to
-be able to render boundaries based on ways not polygons, to avoid
-simplification artefacts along land boundaries.  There is a separate piece of
-software that will pre-process a planet file and add these tags where they are
-missing, as well as pre-simplifying them ([Admin Boundary
-Simplification](https://github.com/geofabrik/admin-polygon-simplify)).
-Medium-term it is expected that this functionality will be part of tilemaker
-(potentially following in the footsteps of [this proposed tilemaker feature
-change](https://github.com/systemed/tilemaker/pull/292)), and hence
-pre-processing will not be required any more.
-
-You do not **have** to run this program on your input data but if you don't, 
-then the admin boundaries will be incomplete and/or not pretty.
-
-## See also
-
-* [Tilemaker](https://tilemaker.org/)
-* [Tilemaker source code](https://github.com/systemed/tilemaker)
-* [Geofabrik Basic Vector Tile documentation](https://github.com/geofabrik/geofabrik-basicvt-docs)
-* [Admin Boundary Simplification](https://github.com/geofabrik/admin-polygon-simplify)
+* [Instructions](https://shortbread.geofabrik.de/make-vectortiles/)
+* [Schema documentation](https://shortbread.geofabrik.de/schema/)
 
 ## Authors
 
