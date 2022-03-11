@@ -454,10 +454,16 @@ function process_boundary_lines(way)
 	elseif min_admin_level <= 4 then
 		mz = 7
 	end
+	local maritime = way:Find("maritime")
+	local maritimeBool = false
+	if maritime == "yes" then
+		maritimeBool = true
+	end
 	if mz < inf_zoom then
 		way:Layer("boundaries", false)
 		way:MinZoom(mz)
 		way:AttributeNumeric("admin_level", min_admin_level)
+		way:AttributeBoolean("maritime", maritimeBool)
 	end
 end
 
