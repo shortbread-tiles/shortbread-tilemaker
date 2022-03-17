@@ -757,9 +757,6 @@ function way_function(way)
 	end
 
 	-- Layer boundaries
-	if way:Find("boundary") == "administrative" then
-		process_boundary_labels(way)
-	end
 	process_boundary_lines(way)
 
 	-- Layer streets, street_labels
@@ -822,6 +819,22 @@ function attribute_function(attr, layer)
 		attributes = {}
 		attributes["x"] = 0
 		attributes["y"] = 0
+		return attributes
+	end
+	if layer == "boundary_labels" then
+		attributes = {}
+		attributes["admin_level"] = attr["admin_leve"]
+		if attributes["admin_level"] == nil then
+			attributes["admin_level"] = attr["ADMIN_LEVE"]
+		end
+		keys = {"name", "name_de", "name_en", "way_area"}
+		for index, value in ipairs(keys) do
+			if attr[value] == nil then
+				attributes[value] = attr[string.upper(value)]
+			else
+				attributes[value] = attr[value]
+			end
+		end
 		return attributes
 	end
 	return attr
