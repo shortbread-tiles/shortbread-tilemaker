@@ -451,7 +451,7 @@ function process_boundary_lines(way)
 	if mz < inf_zoom then
 		way:Layer("boundaries", false)
 		way:MinZoom(mz)
-		way:AttributeNumeric("admin_level", min_admin_level)
+		way:Attribute("admin_level", tostring(min_admin_level))
 		way:AttributeBoolean("maritime", maritimeBool)
 	end
 end
