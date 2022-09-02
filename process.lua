@@ -407,7 +407,7 @@ function process_boundary_labels(way)
 		way:LayerAsCentroid("boundary_labels")
 		way:MinZoom(mz)
 		setNameAttributes(way)
-		way:Attribute("admin_level", admin_level)
+		way:AttributeNumeric("admin_level", admin_level)
 		-- way_area is in ha, not m² due to 32-bit limit
 		way:AttributeNumeric("way_area", area / 10000)
 		way:ZOrder(area / 10000)
@@ -429,7 +429,7 @@ function process_boundary_lines(way)
 		local admin_level = way:FindInRelation("admin_level")
 		local boundary = way:FindInRelation("boundary")
 		local al = 99
-		if admin_level ~= "" and boundary == "administrative" then
+		if admin_level ~= nil and boundary == "administrative" then
 			al = tonumber(admin_level)
 		end
 		if al ~= nil and al >= 2 then
@@ -451,7 +451,7 @@ function process_boundary_lines(way)
 	if mz < inf_zoom then
 		way:Layer("boundaries", false)
 		way:MinZoom(mz)
-		way:Attribute("admin_level", tostring(min_admin_level))
+		way:AttributeNumeric("admin_level", min_admin_level)
 		way:AttributeBoolean("maritime", maritimeBool)
 	end
 end
