@@ -378,42 +378,6 @@ function process_sites(way)
 	end
 end
 
-function process_boundary_labels(way)
-	if not way:Find("type") == "boundary" then
-		return
-	end
-	if not way:Holds("name") then
-		return
-	end
-	local area = way:Area()
-	if area == 0 then
-		return
-	end
-	local mz = inf_zoom
-	local admin_level = tonumber(way:Find("admin_level"))
-	if admin_level == nil then
-		return
-	end
-	if admin_level == 2 and area >= 2 * 10^12 then
-		mz = 2
-	elseif (admin_level == 2 or admin_level == 4) and area >= 7 * 10^11 then
-		mz = 3
-	elseif (admin_level == 2 or admin_level == 4) and area >= 1 * 10^11 then
-		mz = 4
-	elseif admin_level == 2 or admin_level == 4 then
-		mz = 5
-	end
-	if mz < inf_zoom then
-		way:LayerAsCentroid("boundary_labels")
-		way:MinZoom(mz)
-		setNameAttributes(way)
-		way:AttributeNumeric("admin_level", admin_level)
-		-- way_area is in ha, not m² due to 32-bit limit
-		way:AttributeNumeric("way_area", area / 10000)
-		way:ZOrder(area / 10000)
-	end
-end
-
 function process_boundary_lines(way)
 	if way:Holds("type") then
 		return
