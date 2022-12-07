@@ -39,4 +39,11 @@ jq '.settings.maxzoom |= 7' config.json > config-lowzoom.json
 echo "Merging"
 rsync -a "$OUT_DIR/large/" "$OUT_DIR/small/"
 
+echo "Setting correct maxzoom in metadata.json"
+TMPFILE=$(mktemp)
+jq '.maxzoom=14' "$OUT_DIR/small/metadata.json" > $TMPFILE
+chmod --reference="$OUT_DIR/small/metadata.json" $TMPFILE
+chown --reference="$OUT_DIR/small/metadata.json" $TMPFILE
+mv $TMPFILE "$OUT_DIR/small/metadata.json"
+
 echo "Result written to $OUT_DIR/small/"
