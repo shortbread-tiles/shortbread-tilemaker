@@ -714,7 +714,8 @@ function way_function(way)
 
 	-- Layer streets, street_labels
 	local area = way:Area()
-	if area == 0 and (way:Holds("highway") or way:Holds("railway") or way:Holds("aeroway")) then
+	local area_tag = way:Find("area")
+	if (area == 0 or area_tag ~= "yes") and (way:Holds("highway") or way:Holds("railway") or way:Holds("aeroway")) then
 		process_streets(way)
 		process_street_labels(way)
 	end
@@ -723,7 +724,7 @@ function way_function(way)
 	if area > 0 and way:Holds("highway") then
 		process_street_polygons(way)
 	end
-	
+
 	-- Layer aerialways
 	if way:Holds("aerialway") then
 		process_aerialways(way)
