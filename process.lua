@@ -240,10 +240,12 @@ end
 function process_water_polygons(way)
 	local waterway = way:Find("waterway")
 	local natural = way:Find("natural")
+	local water = way:Find("water")
 	local landuse = way:Find("landuse")
 	local mz = inf_zoom
 	local kind = ""
-	if landuse == "reservoir" or landuse == "basin" or natural == "water" or natural == "glacier" then
+	local is_river = (natural == "water" and water == "river") or waterway == "riverbank"
+	if landuse == "reservoir" or landuse == "basin" or (natural == "water" and not is_river) or natural == "glacier" then
 		mz = math.max(4, zmin_for_area(way, 0.01))
 		if mz >= 10 then
 			mz = math.max(10, zmin_for_area(way, 0.1))
@@ -253,9 +255,12 @@ function process_water_polygons(way)
 		elseif natural == "water" or natural == "glacier" then
 			kind = natural
 		end
-	elseif waterway == "riverbank" or waterway == "dock" or waterway == "canal" then
+	elseif is_river or waterway == "dock" or waterway == "canal" then
 		mz = math.max(4, zmin_for_area(way, 0.1))
 		kind = waterway
+		if kind == "" then
+			kind = water
+		end
 	end
 	if mz < inf_zoom then
 		way:Layer("water_polygons", true)
