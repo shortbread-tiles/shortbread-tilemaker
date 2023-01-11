@@ -34,6 +34,20 @@ function setNameAttributes(obj)
 	obj:Attribute("name_en", fillWithFallback(name_en, name, name_de))
 end
 
+-- Convert layer tag to a number between -7 and +7, defaults to 0.
+function layerNumeric(way)
+	local layer = tonumber(way:Find("layer"))
+	if not (layer == nil) then
+		if layer > 7 then
+			layer = 7
+		elseif layer < -7 then
+			layer = -7
+		end
+		return layer
+	end
+	return 0
+end
+
 -- Set z_order
 function setZOrder(way, is_rail, ignore_bridge)
 	local highway = way:Find("highway")
@@ -304,14 +318,23 @@ function process_water_lines(way)
 		mz_label = 14
 	end
 	if mz < inf_zoom then
+		local tunnel = toTunnelBool(way:Find("tunnel"), way:Find("covered"))
+		local bridge = toBridgeBool(way:Find("bridge"))
+		local layer = layerNumeric(way)
 		way:Layer("water_lines", false)
 		way:MinZoom(mz)
 		way:Attribute("kind", kind)
+		way:AttributeBoolean("tunnel", tunnel)
+		way:AttributeBoolean("bridge", bridge)
+		way:ZOrder(layer)
 		if way:Holds("name") then
 			way:Layer("water_lines_labels", false)
 			way:MinZoom(mz_label)
 			way:Attribute("kind", kind)
+			way:AttributeBoolean("tunnel", tunnel)
+			way:AttributeBoolean("bridge", bridge)
 			setNameAttributes(way)
+			way:ZOrder(layer)
 		end
 	end
 end
@@ -431,7 +454,7 @@ function process_boundary_lines(way)
 end
 
 function toTunnelBool(tunnel, covered)
-	if tunnel == "yes" or tunnel == "building_passage" or covered == "yes" then
+	if tunnel == "yes" or tunnel == "culvert" or tunnel == "building_passage" or covered == "yes" then
 		return true
 	end
 	return false
