@@ -27,17 +27,22 @@ if [ ! -d "$OUT_DIR" ]; then
 fi
 
 EXTRA_ARGS=$@
-echo "Make small region first."
+echo "Make small region."
 mkdir -p $OUT_DIR/small
 "$TILEMAKER" $EXTRA_ARGS --input $SMALL_OSM_PBF --output $OUT_DIR/small --config config.json --process process.lua
 
-echo "Make large region first."
+echo "Make large region."
+LARGE_OSM_PBF_FILTERED=$(mktemp --suffix .osm.pbf)
+osmium tags-filter --overwrite -o $LARGE_OSM_PBF_FILTERED --progress $LARGE_OSM_PBF n/place r/admin_level=2 r/admin_level=4 w/waterway w/highway=motorway w/highway=motorway_link w/highway=trunk w/highway=trunk_link wr/natural=water wr/waterway=riverbank wr/landuse=basin wr/landuse=reservoir wr/natural=glacier wr/waterway=dock wr/waterway=canal wr/landuse=forest
 mkdir -p $OUT_DIR/large
 jq '.settings.maxzoom |= 7' config.json > config-lowzoom.json
-"$TILEMAKER" $EXTRA_ARGS --bbox=$BBOX --input $LARGE_OSM_PBF --output $OUT_DIR/small --config config-lowzoom.json --process process.lua
+"$TILEMAKER" $EXTRA_ARGS --bbox=$BBOX --input $LARGE_OSM_PBF_FILTERED --output $OUT_DIR/small --config config-lowzoom.json --process process.lua
+rm $LARGE_OSM_PBF_FILTERED
 
 echo "Merging"
-rsync -a "$OUT_DIR/large/" "$OUT_DIR/small/"
+TMPFILE=$(mktemp)
+jq '.maxzoom=14' "$OUT_DIR/small/metadata.json" > "$TMPFILE"
+mv "$TMPFILE" "$OUT_DIR/small/metadata.json"
 
 echo "Setting correct maxzoom in metadata.json"
 TMPFILE=$(mktemp)
