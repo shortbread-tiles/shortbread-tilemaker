@@ -263,13 +263,18 @@ function process_water_polygons(way)
 		end
 	end
 	if mz < inf_zoom then
+		local way_area = way:Area()
 		way:Layer("water_polygons", true)
 		way:MinZoom(mz)
 		way:Attribute("kind", kind)
+		way:AttributeNumeric("way_area", way_area)
+		way:ZOrder(way_area)
 		if way:Holds("name") then
 			way:LayerAsCentroid("water_polygons_labels")
 			way:MinZoom(14)
 			way:Attribute("kind", kind)
+			way:AttributeNumeric("way_area", way_area)
+			way:ZOrder(way_area)
 			setNameAttributes(way)
 		end
 	end
