@@ -221,7 +221,7 @@ function node_function(node)
 	local railway = node:Find("railway")
 	local aeroway = node:Find("aeroway")
 	local aerialway = node:Find("aerialway")
-	if railway == "station" or railway == "halt" or aeroway == "aerodrome" or aerialway == "station" then
+	if railway == "station" or railway == "halt" or railway == "tram_stop" or aeroway == "aerodrome" or aerialway == "station" then
 		process_public_transport_layer(node, false)
 	end
 
