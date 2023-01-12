@@ -10,7 +10,7 @@ end
 
 -- Process node tags
 
-node_keys = { "place", "highway", "railway", "aeroway", "aerialway", "addr:housenumber", "addr:housename" }
+node_keys = { "place", "highway", "railway", "aeroway", "amenity", "aerialway", "addr:housenumber", "addr:housename" }
 
 inf_zoom = 99
 
@@ -173,6 +173,8 @@ function process_public_transport_layer(obj, is_area)
 	local railway = obj:Find("railway")
 	local aeroway = obj:Find("aeroway")
 	local aerialway = obj:Find("aerialway")
+	local highway = obj:Find("highway")
+	local amenity = obj:Find("amenity")
 	local kind = ""
 	local mz = inf_zoom
 	if railway == "station" or railway == "halt" then
@@ -181,6 +183,12 @@ function process_public_transport_layer(obj, is_area)
 	elseif railway == "tram_stop" then
 		kind = railway
 		mz = 14
+	elseif highway == "bus_stop" then
+		kind = highway
+		mz = 14
+	elseif amenity == "bus_station" then
+		kind = amenity
+		mz = 13
 	elseif aerialway == "station" then
 		kind = "aerialway_station"
 		mz = 13
@@ -221,7 +229,9 @@ function node_function(node)
 	local railway = node:Find("railway")
 	local aeroway = node:Find("aeroway")
 	local aerialway = node:Find("aerialway")
-	if railway == "station" or railway == "halt" or railway == "tram_stop" or aeroway == "aerodrome" or aerialway == "station" then
+	local amenity = node:Find("amenity")
+	local highway = node:Find("highway")
+	if railway == "station" or railway == "halt" or railway == "tram_stop" or highway == "bus_stop" or amenity == "bus_station" or aeroway == "aerodrome" or aerialway == "station" then
 		process_public_transport_layer(node, false)
 	end
 
@@ -799,7 +809,10 @@ function way_function(way)
 	-- Layer public_transport 
 	local railway = way:Find("railway")
 	local aeroway = way:Find("aeroway")
-	if railway == "station" or railway == "halt" or aeroway == "aerodrome" then
+	local highway = way:Find("highway")
+	local amenity = way:Find("amenity")
+	local aeroway = way:Find("aeroway")
+	if is_area and (railway == "station" or railway == "halt" or aeroway == "aerodrome" or highway == "bus_stop" or amenity == "bus_station") then
 		process_public_transport_layer(way, true)
 	end
 
