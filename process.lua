@@ -51,7 +51,7 @@ end
 -- Set z_order
 function setZOrder(way, is_rail, ignore_bridge)
 	local highway = way:Find("highway")
-	local railway = way:Find("highway")
+	local railway = way:Find("railway")
 	local layer = tonumber(way:Find("layer"))
 	local zOrder = 0
 	local Z_STEP = 14
