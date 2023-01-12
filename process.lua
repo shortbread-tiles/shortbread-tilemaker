@@ -339,6 +339,33 @@ function process_water_lines(way)
 	end
 end
 
+-- Return value for kind field of pier_* layers.
+function get_pier_featuretype(way)
+	local man_made = way:Find("man_made")
+	if man_made == "pier" or man_made == "breakwater" or man_made == "groyne" then
+		return man_made
+	end
+	return nil
+end
+
+function process_pier_lines(way)
+	local kind = get_pier_featuretype(way)
+	if kind ~= nil then
+		way:Layer("pier_lines", false)
+		way:MinZoom(12)
+		way:Attribute("kind", kind)
+	end
+end
+
+function process_pier_polygons(way)
+	local kind = get_pier_featuretype(way)
+	if kind ~= nil then
+		way:Layer("pier_polygons", true)
+		way:MinZoom(12)
+		way:Attribute("kind", kind)
+	end
+end
+
 function process_land(way)
 	local landuse = way:Find("landuse")
 	local natural = way:Find("natural")
@@ -369,9 +396,6 @@ function process_land(way)
 		mz = 13
 	elseif leisure == "golf_course" or leisure == "park" or leisure == "garden" or leisure == "playground" or leisure == "miniature_golf" then
 		kind = leisure
-		mz = 11
-	elseif way:Find("man_made") == "pier" then
-		kind = "pier"
 		mz = 11
 	elseif landuse == "cemetery" then
 		kind = "cemetery"
@@ -723,22 +747,33 @@ function process_addresses(way, is_area)
 end
 
 function way_function(way)
+	local area = way:Area()
+	local area_tag = way:Find("area")
+	local is_aera = not (area == 0 and area_tag ~= "yes")
+
 	-- Layers water_polygons, water_polygons_labels
-	if way:Holds("waterway") or way:Holds("natural") or way:Holds("landuse") then
+	if is_area and (way:Holds("waterway") or way:Holds("natural") or way:Holds("landuse")) then
 		process_water_polygons(way)
 	end
 	-- Layers water_lines, water_lines_labels
-	if way:Holds("waterway") then
+	if not is_area and way:Holds("waterway") then
 		process_water_lines(way)
 	end
 
+	-- Layer pier_lines, pier_polygons
+	if not is_area and way:Holds("man_made") then
+		process_pier_lines(way)
+	elseif is_area and way:Holds("man_made") then
+		process_pier_polygons(way)
+	end
+
 	-- Layer land
-	if way:Holds("landuse") or way:Holds("natural") or way:Holds("wetland") or way:Find("amenity") == "grave_yard" or way:Holds("leisure") or way:Find("man_made") == "pier" then
+	if is_aera and (way:Holds("landuse") or way:Holds("natural") or way:Holds("wetland") or way:Find("amenity") == "grave_yard" or way:Holds("leisure")) then
 		process_land(way)
 	end
 
 	-- Layer sites
-	if way:Holds("amenity") or way:Holds("leisure") or way:Holds("military") or way:Holds("landuse") then
+	if is_aera and (way:Holds("amenity") or way:Holds("leisure") or way:Holds("military") or way:Holds("landuse")) then
 		process_sites(way)
 	end
 
@@ -746,15 +781,13 @@ function way_function(way)
 	process_boundary_lines(way)
 
 	-- Layer streets, street_labels
-	local area = way:Area()
-	local area_tag = way:Find("area")
-	if (area == 0 or area_tag ~= "yes") and (way:Holds("highway") or way:Holds("railway") or way:Holds("aeroway")) then
+	if not is_area and (way:Holds("highway") or way:Holds("railway") or way:Holds("aeroway")) then
 		process_streets(way)
 		process_street_labels(way)
 	end
 
 	-- Layer street_polygons, street_polygons_labels
-	if area > 0 and way:Holds("highway") then
+	if is_area and way:Holds("highway") then
 		process_street_polygons(way)
 	end
 
@@ -771,14 +804,14 @@ function way_function(way)
 	end
 
 	-- Layer buildings
-	if way:Holds("building") then
+	if is_area and way:Holds("building") then
 		process_buildings(way)
 	end
 
 	-- Layer addresses
 	local housenumber = way:Find("addr:housenumber")
 	local housename = way:Find("addr:housename")
-	if (housenumber ~= "" or housename ~= "") then
+	if is_area and (housenumber ~= "" or housename ~= "") then
 		process_addresses(way, true)
 	end
 end
