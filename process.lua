@@ -756,6 +756,23 @@ function process_addresses(way, is_area)
 	way:Attribute("number", way:Find("addr:housenumber"))
 end
 
+function process_ferries(way)
+	local mz = inf_zoom
+	if way:Find("route") == "ferry" then
+		local motor_vehicle = way:Find("motor_vehicle")
+		mz = 10
+		if motor_vehicle == "no" then
+			mz = 12
+		end
+	end
+	if mz < inf_zoom then
+		way:Layer("ferries", false)
+		way:MinZoom(mz)
+		way:Attribute("kind", "ferry")
+		setNameAttributes(way)
+	end
+end
+
 function way_function(way)
 	local area = way:Area()
 	local area_tag = way:Find("area")
@@ -804,6 +821,11 @@ function way_function(way)
 	-- Layer aerialways
 	if way:Holds("aerialway") then
 		process_aerialways(way)
+	end
+
+	-- Layer ferries
+	if way:Find("route") == "ferry" then
+		process_ferries(way)
 	end
 
 	-- Layer public_transport 

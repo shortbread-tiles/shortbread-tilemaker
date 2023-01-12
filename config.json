@@ -61,6 +61,10 @@
             "minzoom": 14,
             "maxzoom": 14
         },
+        "ferries": {
+            "minzoom": 8,
+            "maxzoom": 14
+        },
         "streets": {
             "minzoom": 14,
             "maxzoom": 14,
