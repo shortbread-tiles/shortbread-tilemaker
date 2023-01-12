@@ -85,7 +85,7 @@ function setZOrder(way, is_rail, ignore_bridge)
 		hwClass = 7
 	elseif highway == "tertiary"  then
 		hwClass = 6
-	elseif highway == "unclassified" or highway == "residential" or highway == "road" or highway == "motorway_link" or highway == "trunk_link" or highway == "primary_link" or highway == "secondary_link" or highway == "tertiary_link" then
+	elseif highway == "unclassified" or highway == "residential" or highway == "road" or highway == "motorway_link" or highway == "trunk_link" or highway == "primary_link" or highway == "secondary_link" or highway == "tertiary_link" or highway == "busway" or highway == "bus_guideway" then
 		hwClass = 5
 	elseif highway == "living_street" or highway == "pedestrian" then
 		hwClass = 4
@@ -537,7 +537,7 @@ function process_streets(way)
 		elseif highway == "tertiary" or highway == "tertiary_link" then
 			mz = 10
 			kind = "tertiary"
-		elseif highway == "unclassified" or highway == "residential" then
+		elseif highway == "unclassified" or highway == "residential" or highway == "bus_guideway" or highway == "busway" then
 			mz = 12
 			kind = highway
 		elseif highway == "living_street" or highway == "pedestrian" or highway == "track" then
@@ -661,7 +661,7 @@ function process_street_labels(way)
 		mz = 14
 		kind = "tertiary"
 		link = true
-	elseif highway == "unclassified" or highway == "residential" or highway == "living_street" or highway == "pedestrian" or highway == "track" or highway == "service" or highway == "footway" or highway == "steps" or highway == "path" or highway == "cycleway" then
+	elseif highway == "unclassified" or highway == "residential" or highway == "busway" or highway == "bus_guideway" or highway == "living_street" or highway == "pedestrian" or highway == "track" or highway == "service" or highway == "footway" or highway == "steps" or highway == "path" or highway == "cycleway" then
 		mz = 14
 		kind = highway
 	end
