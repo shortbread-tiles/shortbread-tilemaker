@@ -27,6 +27,14 @@
                 "geometry": "LineString"
             },
             {
+                "layer": "pier_lines",
+                "geometry": "LineString"
+            },
+            {
+                "layer": "pier_polygons",
+                "geometry": "Polygon"
+            },
+            {
                 "layer": "streets",
                 "geometry": "LineString"
             },

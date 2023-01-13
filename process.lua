@@ -776,7 +776,14 @@ end
 function way_function(way)
 	local area = way:Area()
 	local area_tag = way:Find("area")
-	local is_aera = not (area == 0 and area_tag ~= "yes")
+	local type_tag = way:Find("type")
+	local boundary_tag = way:Find("boundary")
+	local is_area = (area > 0)
+	-- Boolean flags for closed ways in cases where features can be mapped as line or area
+	-- If closed ways are assumed to be polygons by default except tagged with area=no
+	local is_area = area > 0 and area_tag ~= "no"
+	-- If closed ways are assumed to be rings by default except tagged with area=yes, type=multipolygon or type=boundary
+	local is_area_default_linear = area > 0 and (area_tag == "yes" or type_tag == "multipolygon" or type_tag == "boundary")
 
 	-- Layers water_polygons, water_polygons_labels
 	if is_area and (way:Holds("waterway") or way:Holds("natural") or way:Holds("landuse")) then
@@ -788,19 +795,20 @@ function way_function(way)
 	end
 
 	-- Layer pier_lines, pier_polygons
-	if not is_area and way:Holds("man_made") then
+	local man_made = way:Find("man_made")
+	if not is_area and man_made ~= "" then
 		process_pier_lines(way)
-	elseif is_area and way:Holds("man_made") then
+	elseif is_area and man_made ~= "" then
 		process_pier_polygons(way)
 	end
 
 	-- Layer land
-	if is_aera and (way:Holds("landuse") or way:Holds("natural") or way:Holds("wetland") or way:Find("amenity") == "grave_yard" or way:Holds("leisure")) then
+	if is_area and (way:Holds("landuse") or way:Holds("natural") or way:Holds("wetland") or way:Find("amenity") == "grave_yard" or way:Holds("leisure")) then
 		process_land(way)
 	end
 
 	-- Layer sites
-	if is_aera and (way:Holds("amenity") or way:Holds("leisure") or way:Holds("military") or way:Holds("landuse")) then
+	if is_area and (way:Holds("amenity") or way:Holds("leisure") or way:Holds("military") or way:Holds("landuse")) then
 		process_sites(way)
 	end
 
@@ -808,13 +816,13 @@ function way_function(way)
 	process_boundary_lines(way)
 
 	-- Layer streets, street_labels
-	if not is_area and (way:Holds("highway") or way:Holds("railway") or way:Holds("aeroway")) then
+	if not is_area_default_linear and (way:Holds("highway") or way:Holds("railway") or way:Holds("aeroway")) then
 		process_streets(way)
 		process_street_labels(way)
 	end
 
 	-- Layer street_polygons, street_polygons_labels
-	if is_area and way:Holds("highway") then
+	if is_area_default_linear and way:Holds("highway") then
 		process_street_polygons(way)
 	end
 
