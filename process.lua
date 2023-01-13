@@ -890,6 +890,7 @@ function attribute_function(attr, layer)
 		if attributes["admin_level"] == nil then
 			attributes["admin_level"] = attr["ADMIN_LEVE"]
 		end
+		attributes["admin_level"] = tonumber(attributes["admin_level"])
 		keys = {"name", "name_de", "name_en", "way_area"}
 		for index, value in ipairs(keys) do
 			if attr[value] == nil then
