@@ -140,6 +140,11 @@ function process_place_layer(node)
 		if population == "" then
 			population = "1000"
 		end
+	elseif place == "quarter" then
+		mz = 10
+		if population == "" then
+			population = "500"
+		end
 	elseif place == "neighbourhood" then
 		mz = 10
 		if population == "" then
