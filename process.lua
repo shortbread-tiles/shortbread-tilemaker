@@ -414,6 +414,9 @@ function process_land(way)
 	elseif way:Find("amenity") == "grave_yard" then
 		kind = "grave_yard"
 		mz = 13
+	elseif landuse == "garages" then
+		kind = landuse
+		mz = 12
 	elseif leisure == "golf_course" or leisure == "park" or leisure == "garden" or leisure == "playground" or leisure == "miniature_golf" then
 		kind = leisure
 		mz = 11
@@ -435,7 +438,7 @@ function process_sites(way)
 	local leisure = way:Find("leisure")
 	local landuse = way:Find("landuse")
 	local mz = inf_zoom
-	if amenity == "university" or amenity == "hospital" or amenity == "prison" or amenity == "parking" or amenity == "bicycle_parking" then
+	if amenity == "university" or amenity == "hospital" or amenity == "prison" or amenity == "parking" or amenity == "bicycle_parking" or amenity == "school" or amenity == "college" then
 		kind = amenity
 		mz = 14
 	elseif leisure == "sports_center" then
