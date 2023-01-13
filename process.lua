@@ -34,6 +34,16 @@ function setNameAttributes(obj)
 	obj:Attribute("name_en", fillWithFallback(name_en, name, name_de))
 end
 
+-- Return true if way is oneway
+function isOneway(oneway)
+	return oneway == "yes" or oneway == "1" or oneway == "true" or oneway == "-1"
+end
+
+-- Return true if way is a reverse oneway
+function isReverseOneway(oneway)
+	return oneway == "-1"
+end
+
 -- Convert layer tag to a number between -7 and +7, defaults to 0.
 function layerNumeric(way)
 	local layer = tonumber(way:Find("layer"))
@@ -581,6 +591,9 @@ function process_streets(way)
 	if layer == nil then
 		layer = 0
 	end
+	local oneway = way:Find("oneway")
+	local onewayBool = not rail and isOneway(oneway)
+	local reverseOnewayBool = not rail and isReverseOneway(oneway)
 	if mz <= 13 then
 		way:Layer("streets_med", false)
 		way:MinZoom(mz)
@@ -608,6 +621,8 @@ function process_streets(way)
 		way:Attribute("horse", horse)
 		way:AttributeBoolean("tunnel", tunnelBool)
 		way:AttributeBoolean("bridge", bridgeBool)
+		way:AttributeBoolean("oneway", onewayBool)
+		way:AttributeBoolean("oneway_reverse", reverseOnewayBool)
 		if tracktype ~= "" then
 			way:Attribute("tracktype", tracktype)
 		end
