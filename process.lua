@@ -899,6 +899,13 @@ function attribute_function(attr, layer)
 				attributes[value] = attr[value]
 			end
 		end
+		-- Fill with fallback values if empty
+		local name = attributes["name"]
+		local name_de = attributes["name_de"]
+		local name_en = attributes["name_en"]
+		attributes["name"] = fillWithFallback(name, name_en, name_de)
+		attributes["name_de"] = fillWithFallback(name_de, name, name_en)
+		attributes["name_en"] = fillWithFallback(name_en, name, name_de)
 		return attributes
 	end
 	return attr
