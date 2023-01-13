@@ -5,6 +5,7 @@
 set -euo pipefail
 
 TILEMAKER=${TILEMAKER:-tilemaker}
+OSMIUM=${OSMIUM:-osmium}
 
 if [ "$#" -lt 4 ]; then
     echo "ERROR: Wrong Usage"
@@ -33,7 +34,7 @@ mkdir -p $OUT_DIR/small
 
 echo "Make large region."
 LARGE_OSM_PBF_FILTERED=$(mktemp --suffix .osm.pbf)
-osmium tags-filter --overwrite -o $LARGE_OSM_PBF_FILTERED --progress $LARGE_OSM_PBF n/place r/admin_level=2 r/admin_level=4 w/waterway w/highway=motorway w/highway=motorway_link w/highway=trunk w/highway=trunk_link wr/natural=water wr/waterway=riverbank wr/landuse=basin wr/landuse=reservoir wr/natural=glacier wr/waterway=dock wr/waterway=canal wr/landuse=forest
+"$OSMIUM" tags-filter --overwrite -o $LARGE_OSM_PBF_FILTERED --progress $LARGE_OSM_PBF n/place r/admin_level=2 r/admin_level=4 w/waterway w/highway=motorway w/highway=motorway_link w/highway=trunk w/highway=trunk_link wr/natural=water wr/waterway=riverbank wr/landuse=basin wr/landuse=reservoir wr/natural=glacier wr/waterway=dock wr/waterway=canal wr/landuse=forest
 mkdir -p $OUT_DIR/large
 jq '.settings.maxzoom |= 7' config.json > config-lowzoom.json
 "$TILEMAKER" $EXTRA_ARGS --bbox=$BBOX --input $LARGE_OSM_PBF_FILTERED --output $OUT_DIR/small --config config-lowzoom.json --process process.lua
