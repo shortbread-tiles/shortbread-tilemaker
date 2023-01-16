@@ -210,9 +210,12 @@ function process_public_transport_layer(obj, is_area)
 	elseif aerialway == "station" then
 		kind = "aerialway_station"
 		mz = 13
-	else
-		kind = obj:Find("aeroway")
+	elseif aeroway == "aerodrome" then
+		kind = aeroway
 		mz = 11
+	elseif aeroway == "helipad" then
+		kind = aeroway
+		mz = 13
 	end
 	if is_area then
 		obj:LayerAsCentroid("public_transport")
@@ -722,6 +725,7 @@ end
 
 function process_street_polygons(way)
 	local highway = way:Find("highway")
+	local aeroway = way:Find("aeroway")
 	local surface = way:Find("surface")
 	local service = way:Find("service")
 	local kind = nil
@@ -729,6 +733,9 @@ function process_street_polygons(way)
 	if highway == "pedestrian" or highway == "service" then
 		mz = 14
 		kind = highway
+	elseif aeroway == "runway" then
+		mz = 11
+		kind = aeroway
 	end
 	if mz < inf_zoom then
 		way:Layer("street_polygons", true)
@@ -862,7 +869,7 @@ function way_function(way)
 	end
 
 	-- Layer street_polygons, street_polygons_labels
-	if is_area_default_linear and way:Holds("highway") then
+	if is_area_default_linear and (way:Holds("highway") or way:Holds("aeroway")) then
 		process_street_polygons(way)
 	end
 

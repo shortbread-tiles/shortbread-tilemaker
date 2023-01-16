@@ -60,9 +60,12 @@
             "simplify_ratio": 2
         },
         "street_polygons": {
-            "minzoom": 14,
+            "minzoom": 11,
             "maxzoom": 14,
-            "combine_below": 15
+            "combine_below": 15,
+            "simplify_below": 14,
+            "simplify_level": 0.0001,
+            "simplify_ratio": 2
         },
         "streets_polygons_labels": {
             "minzoom": 14,
