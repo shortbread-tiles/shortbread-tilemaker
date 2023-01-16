@@ -204,6 +204,9 @@ function process_public_transport_layer(obj, is_area)
 	elseif amenity == "bus_station" then
 		kind = amenity
 		mz = 13
+	elseif amenity == "ferry_terminal" then
+		kind = amenity
+		mz = 12
 	elseif aerialway == "station" then
 		kind = "aerialway_station"
 		mz = 13
@@ -246,7 +249,7 @@ function node_function(node)
 	local aerialway = node:Find("aerialway")
 	local amenity = node:Find("amenity")
 	local highway = node:Find("highway")
-	if railway == "station" or railway == "halt" or railway == "tram_stop" or highway == "bus_stop" or amenity == "bus_station" or aeroway == "aerodrome" or aerialway == "station" then
+	if railway == "station" or railway == "halt" or railway == "tram_stop" or highway == "bus_stop" or amenity == "bus_station" or amenity == "ferry_terminal" or aeroway == "aerodrome" or aerialway == "station" then
 		process_public_transport_layer(node, false)
 	end
 
@@ -865,7 +868,7 @@ function way_function(way)
 	local highway = way:Find("highway")
 	local amenity = way:Find("amenity")
 	local aeroway = way:Find("aeroway")
-	if is_area and (railway == "station" or railway == "halt" or aeroway == "aerodrome" or highway == "bus_stop" or amenity == "bus_station") then
+	if is_area and (railway == "station" or railway == "halt" or aeroway == "aerodrome" or highway == "bus_stop" or amenity == "bus_station" or amenity == "ferry_terminal") then
 		process_public_transport_layer(way, true)
 	end
 
