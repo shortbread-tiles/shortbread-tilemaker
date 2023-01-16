@@ -1,6 +1,6 @@
 {
     "tilestats": {
-        "layerCount": 19,
+        "layerCount": 22,
         "layers": [
             {
                 "layer": "place_labels",
@@ -27,11 +27,23 @@
                 "geometry": "LineString"
             },
             {
+                "layer": "dam_lines",
+                "geometry": "LineString"
+            },
+            {
+                "layer": "dam_polygons",
+                "geometry": "Polygon"
+            },
+            {
                 "layer": "pier_lines",
                 "geometry": "LineString"
             },
             {
                 "layer": "pier_polygons",
+                "geometry": "Polygon"
+            },
+            {
+                "layer": "bridges",
                 "geometry": "Polygon"
             },
             {

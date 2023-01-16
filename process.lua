@@ -807,11 +807,22 @@ function process_ferries(way)
 end
 
 function process_bridges(way)
-	local mz = inf_zoom
 	if way:Find("man_made") == "bridge" then
 		way:Layer("bridges", true)
 		way:MinZoom(12)
 		way:Attribute("kind", "bridge")
+	end
+end
+
+function process_dam(way, polygon)
+	if way:Find("waterway") == "dam" then
+		if polygon then
+			way:Layer("dam_polygons", true)
+		else
+			way:Layer("dam_lines", false)
+		end
+		way:MinZoom(12)
+		way:Attribute("kind", "dam")
 	end
 end
 
@@ -827,13 +838,15 @@ function way_function(way)
 	-- If closed ways are assumed to be rings by default except tagged with area=yes, type=multipolygon or type=boundary
 	local is_area_default_linear = area > 0 and (area_tag == "yes" or type_tag == "multipolygon" or type_tag == "boundary")
 
-	-- Layers water_polygons, water_polygons_labels
+	-- Layers water_polygons, water_polygons_labels, dam_polygons
 	if is_area and (way:Holds("waterway") or way:Holds("natural") or way:Holds("landuse")) then
 		process_water_polygons(way)
+		process_dam(way, true)
 	end
-	-- Layers water_lines, water_lines_labels
+	-- Layers water_lines, water_lines_labels, dam_lines
 	if not is_area and way:Holds("waterway") then
 		process_water_lines(way)
+		process_dam(way, false)
 	end
 
 	-- Layer pier_lines, pier_polygons
