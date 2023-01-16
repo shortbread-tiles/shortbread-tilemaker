@@ -8,9 +8,42 @@ end
 function exit_function()
 end
 
+-- Implement Sets in tables
+function Set(list)
+	local set = {}
+	for _, l in ipairs(list) do set[l] = true end
+	return set
+end
+
 -- Process node tags
 
-node_keys = { "place", "highway", "railway", "aeroway", "amenity", "aerialway", "addr:housenumber", "addr:housename" }
+node_keys = { "place", "highway", "railway", "aeroway", "amenity", "aerialway", "shop", "leisure", "tourism", "man_made", "historic", "emergency", "office", "addr:housenumber", "addr:housename" }
+poi_amenity_values = Set { "police", "fire_station", "post_box", "post_office", "telephone",
+	"library", "townhall", "courthouse", "prison", "embassy", "community_centre", "nursing_home",
+	"arts_centre", "grave_yard", "marketplace", "recycling", "university", "school", "college", "public_building",
+	"pharmacy", "hospital", "clinic", "doctors", "denitst", "veterinary", "theatre", "nightclub", "cinema",
+	"restaurant", "fast_food", "cafe", "pub", "bar", "foot_court", "biergarten", "shelter",
+	"car_rental", "car_wash", "car_sharing", "bicycle_rental", "vending_machine", "bank", "atm",
+	"toilets", "bench", "drinking_water", "fountain", "hunting_stand", "waste_basket", "place_of_worship" }
+catering_values = Set { "restaurant", "fast_food", "pub", "bar", "cafe" }
+poi_leisure_values = Set { "playground", "dog_park", "sports_centre", "pitch", "swimming_pool", "water_park",
+	"golf_course", "stadium", "ice_rink" }
+sport_values = Set { "pitch", "sports_centre" }
+poi_tourism_values = Set { "hotel", "motel", "bed_and_breakfast", "guest_house", "hostel", "chalet",
+	"camp_site", "alpine_hut", "caravan_site", "information", "picnic_site", "viewpoint", "zoo", "theme_park" }
+poi_shop_values = Set { "supermarket", "bakery", "kiosk", "mall", "department_store", "general",
+	"convinience", "clothes", "florist", "chemist", "books", "butcher", "shoes", "alcohol",
+	"beverages", "optican", "jewelry", "gift", "sports", "stationery", "outdoor", "mobile_phone",
+	"toys", "newsagent", "greengrocer", "beauty", "video", "car", "bicycle", "doityourself",
+	"hardware", "furniture", "computer", "garden_centre", "hairdresser", "travel_agency", "laundry",
+	"dry_cleaning" }
+poi_man_made_values = Set { "surveillance", "tower", "windmill", "lighthouse", "wastewater_plant",
+	"water_well", "watermill", "water_works" }
+poi_historic_values = Set { "monument", "memorial", "artwork", "castle", "ruins", "archaelogical_site",
+	"wayside_cross", "wayside_shrine", "battlefield", "fort" }
+poi_emergency_values = Set { "phone", "fire_hydrant" }
+poi_highway_values = Set { "emergency_access_point" }
+poi_office_values = Set { "diplomatic" }
 
 inf_zoom = 99
 
@@ -42,6 +75,23 @@ end
 -- Return true if way is a reverse oneway
 function isReverseOneway(oneway)
 	return oneway == "-1"
+end
+
+-- Add the value of an OSM key if it exists. If the object does not have that key, add NULL.
+function addAttributeOrNull(obj, key)
+	local value = obj:Find(key)
+	if value ~= "" then
+		obj:Attribute(key, value)
+	else
+		obj:Attribute(key, nil)
+	end
+end
+
+-- Add a boolean attribute if the OSM object has the provided key and its value is "yes".
+-- Defaults to false/no.
+function addAttributeBoolean(obj, key)
+	local value = obj:Find(key)
+	obj:Attribute(key, (value == "yes"))
 end
 
 -- Convert layer tag to a number between -7 and +7, defaults to 0.
@@ -824,6 +874,66 @@ function process_dam(way, polygon)
 		way:MinZoom(12)
 		way:Attribute("kind", "dam")
 	end
+end
+
+function process_pois(obj, polygon)
+	local amenity = poi_amenity_values[obj:Find("amenity")]
+	local shop = poi_shop_values[obj:Find("shop")]
+	local tourism = poi_tourism_values[obj:Find("tourism")]
+	local man_made = poi_man_made_values[obj:Find("man_made")]
+	local historic = poi_historic_values[obj:Find("historic")]
+	local leisure = poi_leisure_values[obj:Find("leisure")]
+	local emergency = poi_emergency_values[obj:Find("emergency")]
+	local highway = poi_highway_values[obj:Find("highway")]
+	local office = poi_highway_values[obj:Find("office")]
+	local keep = (amenity ~= nil) or (shop ~= nil) or (tourism ~= nil) or (historic ~= nil) or (leisure ~= nil) or (emergency ~= nil) or (highway ~= nil) or (office ~= nil)
+	if not keep then
+		return
+	end
+	if polygon then
+		obj:LayerAsCentroid("pois")
+	else
+		obj:Layer("pois", false)
+	end
+	obj:MinZoom(14)
+	obj:Attribute("amenity", amenity)
+	obj:Attribute("shop", shop)
+	obj:Attribute("tourism", tourism)
+	obj:Attribute("man_made", historic)
+	obj:Attribute("historic", historic)
+	obj:Attribute("leisure", leisure)
+	obj:Attribute("emergency", emergency)
+	obj:Attribute("highway", highway)
+	obj:Attribute("office", office)
+	if catering_values[amenity] then
+		addAttributeOrNull(obj, "cuisine")
+	end
+	if sport_values[leisure] then
+		addAttributeOrNull(obj, "sport")
+	end
+	if amenity == "vending_machine" then
+		addAttributeOrNull(obj, "vending")
+	end
+	if tourism == "information" then
+		addAttributeOrNull(obj, "information")
+	end
+	if man_made == "tower" then
+		addAttributeOrNull(obj, "tower:type")
+	end
+	if amenity == "recycling" then
+		addAttributeBoolean(obj, "recycling:glass_bottles")
+		addAttributeBoolean(obj, "recycling:paper")
+		addAttributeBoolean(obj, "recycling:clothes")
+		addAttributeBoolean(obj, "recycling:scrap_metal")
+	end
+	if amenity == "bank" then
+		addAttributeBoolean(obj, "atm")
+	end
+	if amenity == "place_of_worship" then
+		addAttributeOrNull(obj, "religion")
+		addAttributeOrNull(obj, "denomination")
+	end
+	setNameAttributes(way)
 end
 
 function way_function(way)

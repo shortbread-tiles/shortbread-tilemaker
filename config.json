@@ -176,6 +176,10 @@
         "sites": {
             "minzoom": 14,
             "maxzoom": 14
+        },
+        "pois": {
+            "minzoom": 14,
+            "maxzoom": 14
         }
     },
     "settings": {
