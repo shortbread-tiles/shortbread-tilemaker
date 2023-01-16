@@ -52,6 +52,13 @@
             "simplify_level": 0.0002,
             "simplify_ratio": 2
         },
+        "bridges": {
+            "minzoom": 12,
+            "maxzoom": 14,
+            "simplify_below": 14,
+            "simplify_level": 0.0001,
+            "simplify_ratio": 2
+        },
         "street_polygons": {
             "minzoom": 14,
             "maxzoom": 14,

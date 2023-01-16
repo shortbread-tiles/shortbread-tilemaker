@@ -799,6 +799,15 @@ function process_ferries(way)
 	end
 end
 
+function process_bridges(way)
+	local mz = inf_zoom
+	if way:Find("man_made") == "bridge" then
+		way:Layer("bridges", true)
+		way:MinZoom(12)
+		way:Attribute("kind", "bridge")
+	end
+end
+
 function way_function(way)
 	local area = way:Area()
 	local area_tag = way:Find("area")
@@ -826,6 +835,11 @@ function way_function(way)
 		process_pier_lines(way)
 	elseif is_area and man_made ~= "" then
 		process_pier_polygons(way)
+	end
+
+	-- Layer bridges
+	if is_area and man_made == "bridge" then
+		process_bridges(way)
 	end
 
 	-- Layer land
