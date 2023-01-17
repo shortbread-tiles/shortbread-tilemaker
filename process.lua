@@ -314,10 +314,9 @@ function node_function(node)
 	end
 end
 
-function zmin_for_area(way, min_square_pixels)
+function zmin_for_area(way, min_square_pixels, way_area)
 	-- Return minimum zoom level where the area of the way/multipolygon is larger than
 	-- the provided threshold.
-	local way_area = way:Area()
 	local circumfence = 40052725.78
 	local zmin = (math.log((min_square_pixels * circumfence^2) / (2^16 * way_area))) / (2 * math.log(2))
 	return math.floor(zmin)
@@ -332,7 +331,7 @@ function zmin_for_length(way, min_length_pixels)
 	return math.floor(zmin)
 end
 
-function process_water_polygons(way)
+function process_water_polygons(way, way_area)
 	local waterway = way:Find("waterway")
 	local natural = way:Find("natural")
 	local water = way:Find("water")
@@ -341,9 +340,9 @@ function process_water_polygons(way)
 	local kind = ""
 	local is_river = (natural == "water" and water == "river") or waterway == "riverbank"
 	if landuse == "reservoir" or landuse == "basin" or (natural == "water" and not is_river) or natural == "glacier" then
-		mz = math.max(4, zmin_for_area(way, 0.01))
+		mz = math.max(4, zmin_for_area(way, 0.01, way_area))
 		if mz >= 10 then
-			mz = math.max(10, zmin_for_area(way, 0.1))
+			mz = math.max(10, zmin_for_area(way, 0.1, way_area))
 		end
 		if landuse == "reservoir" or landuse == "basin" then
 			kind = landuse
@@ -351,14 +350,14 @@ function process_water_polygons(way)
 			kind = natural
 		end
 	elseif is_river or waterway == "dock" or waterway == "canal" then
-		mz = math.max(4, zmin_for_area(way, 0.1))
+		mz = math.max(4, zmin_for_area(way, 0.1, way_area))
 		kind = waterway
 		if kind == "" then
 			kind = water
 		end
 	end
 	if mz < inf_zoom then
-		local way_area = way:Area()
+		local way_area = way_area
 		way:Layer("water_polygons", true)
 		way:MinZoom(mz)
 		way:Attribute("kind", kind)
@@ -380,10 +379,6 @@ function process_water_lines(way)
 	local mz = inf_zoom
 	local mz_label = inf_zoom
 	-- skip if area > 0 (it's no line then)
-	local area = way:Area()
-	if area > 0 and way:Find("area") ~= no then
-		return
-	end
 	mz = inf_zoom
 	if kind == "river" or kind == "canal" then
 		mz = math.max(9, zmin_for_length(way, 0.25))
@@ -941,16 +936,17 @@ function way_function(way)
 	local area_tag = way:Find("area")
 	local type_tag = way:Find("type")
 	local boundary_tag = way:Find("boundary")
-	local is_area = (area > 0)
+	-- Way/Relation is explicitly tagged as area.
+	local area_yes_multi_boundary = (area_tag == "yes" or type_tag == "multipolygon" or type_tag == "boundary")
 	-- Boolean flags for closed ways in cases where features can be mapped as line or area
 	-- If closed ways are assumed to be polygons by default except tagged with area=no
-	local is_area = area > 0 and area_tag ~= "no"
+	local is_area = (area_yes_multi_boundary or (area > 0 and area_tag ~= "no"))
 	-- If closed ways are assumed to be rings by default except tagged with area=yes, type=multipolygon or type=boundary
-	local is_area_default_linear = area > 0 and (area_tag == "yes" or type_tag == "multipolygon" or type_tag == "boundary")
+	local is_area_default_linear = area_yes_multi_boundary
 
 	-- Layers water_polygons, water_polygons_labels, dam_polygons
 	if is_area and (way:Holds("waterway") or way:Holds("natural") or way:Holds("landuse")) then
-		process_water_polygons(way)
+		process_water_polygons(way, area)
 		process_dam(way, true)
 	end
 	-- Layers water_lines, water_lines_labels, dam_lines
