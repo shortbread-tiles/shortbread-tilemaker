@@ -8,16 +8,37 @@ end
 function exit_function()
 end
 
--- Implement Sets in tables
+node_keys = { "place", "highway", "railway", "aeroway", "amenity", "aerialway", "shop", "leisure", "tourism", "man_made", "historic", "emergency", "office", "addr:housenumber", "addr:housename" }
+
+-- Management of accepted key-value pairs for the "pois" layer.
+-- We write only whitelisted tags to the shape file.
+
+-- A table listing all OSM values accepted for a given OSM key.
+-- This is implemented by using the OSM values as keys in the Lua table and assigning the value true to them.
 function Set(list)
 	local set = {}
 	for _, l in ipairs(list) do set[l] = true end
 	return set
 end
 
+-- Check if provided OSM tag value is accepted. If true, return it. If false, return nil.
+---- We return an empty string because Tilemaker cannot write NULL values into vector tiles.
+function valueAcceptedOrNil(set, osm_value)
+	if set[osm_value] then
+		return osm_value
+	end
+	return nil
+end
+
+function nilToEmptyStr(arg)
+	if arg == nil then
+		return ""
+	end
+	return arg
+end
+
 -- Process node tags
 
-node_keys = { "place", "highway", "railway", "aeroway", "amenity", "aerialway", "shop", "leisure", "tourism", "man_made", "historic", "emergency", "office", "addr:housenumber", "addr:housename" }
 poi_amenity_values = Set { "police", "fire_station", "post_box", "post_office", "telephone",
 	"library", "townhall", "courthouse", "prison", "embassy", "community_centre", "nursing_home",
 	"arts_centre", "grave_yard", "marketplace", "recycling", "university", "school", "college", "public_building",
@@ -78,20 +99,28 @@ function isReverseOneway(oneway)
 end
 
 -- Add the value of an OSM key if it exists. If the object does not have that key, add NULL.
-function addAttributeOrNull(obj, key)
+function addAttributeOrEmptyStr(obj, key)
 	local value = obj:Find(key)
 	if value ~= "" then
 		obj:Attribute(key, value)
 	else
-		obj:Attribute(key, nil)
+		obj:Attribute(key, "")
 	end
+end
+
+-- Replace nil by an empty string
+function toEmptyStr(arg)
+	if arg == nil then
+		return ""
+	end
+	return arg
 end
 
 -- Add a boolean attribute if the OSM object has the provided key and its value is "yes".
 -- Defaults to false/no.
 function addAttributeBoolean(obj, key)
 	local value = obj:Find(key)
-	obj:Attribute(key, (value == "yes"))
+	obj:AttributeBoolean(key, (value == "yes"))
 end
 
 -- Convert layer tag to a number between -7 and +7, defaults to 0.
@@ -304,6 +333,12 @@ function node_function(node)
 	local highway = node:Find("highway")
 	if railway == "station" or railway == "halt" or railway == "tram_stop" or highway == "bus_stop" or amenity == "bus_station" or amenity == "ferry_terminal" or aeroway == "aerodrome" or aerialway == "station" then
 		process_public_transport_layer(node, false)
+	end
+
+	-- Layer pois
+	-- Abort here if it was written as POI because Tilemaker cannot write a feature to two layers.
+	if process_pois(node, false) then
+		return
 	end
 
 	-- Layer addresses
@@ -830,8 +865,12 @@ function process_addresses(way, is_area)
 		way:Layer("addresses", false)
 	end
 	way:MinZoom(14)
-	way:Attribute("name", way:Find("addr:housename"))
-	way:Attribute("number", way:Find("addr:housenumber"))
+	setAddressAttributes(way)
+end
+
+function setAddressAttributes(obj)
+	obj:Attribute("housename", obj:Find("addr:housename"))
+	obj:Attribute("housenumber", obj:Find("addr:housenumber"))
 end
 
 function process_ferries(way)
@@ -871,19 +910,21 @@ function process_dam(way, polygon)
 	end
 end
 
+-- Create "pois" layer
+-- Returns true if the feature is written to that layer.
+-- Returns false if it was no POI we are interested in.
 function process_pois(obj, polygon)
-	local amenity = poi_amenity_values[obj:Find("amenity")]
-	local shop = poi_shop_values[obj:Find("shop")]
-	local tourism = poi_tourism_values[obj:Find("tourism")]
-	local man_made = poi_man_made_values[obj:Find("man_made")]
-	local historic = poi_historic_values[obj:Find("historic")]
-	local leisure = poi_leisure_values[obj:Find("leisure")]
-	local emergency = poi_emergency_values[obj:Find("emergency")]
-	local highway = poi_highway_values[obj:Find("highway")]
-	local office = poi_highway_values[obj:Find("office")]
-	local keep = (amenity ~= nil) or (shop ~= nil) or (tourism ~= nil) or (historic ~= nil) or (leisure ~= nil) or (emergency ~= nil) or (highway ~= nil) or (office ~= nil)
-	if not keep then
-		return
+	local amenity = valueAcceptedOrNil(poi_amenity_values, obj:Find("amenity"))
+	local shop = valueAcceptedOrNil(poi_shop_values, obj:Find("shop"))
+	local tourism = valueAcceptedOrNil(poi_tourism_values, obj:Find("tourism"))
+	local man_made = valueAcceptedOrNil(poi_man_made_values, obj:Find("man_made"))
+	local historic = valueAcceptedOrNil(poi_historic_values, obj:Find("historic"))
+	local leisure = valueAcceptedOrNil(poi_leisure_values, obj:Find("leisure"))
+	local emergency = valueAcceptedOrNil(poi_emergency_values, obj:Find("emergency"))
+	local highway = valueAcceptedOrNil(poi_highway_values, obj:Find("highway"))
+	local office = valueAcceptedOrNil(poi_highway_values, obj:Find("office"))
+	if amenity == nil and shop == nil and tourism == nil and historic == nil and leisure == nil and emergency == nil and highway == nil and office == nil then
+		return false
 	end
 	if polygon then
 		obj:LayerAsCentroid("pois")
@@ -891,29 +932,29 @@ function process_pois(obj, polygon)
 		obj:Layer("pois", false)
 	end
 	obj:MinZoom(14)
-	obj:Attribute("amenity", amenity)
-	obj:Attribute("shop", shop)
-	obj:Attribute("tourism", tourism)
-	obj:Attribute("man_made", historic)
-	obj:Attribute("historic", historic)
-	obj:Attribute("leisure", leisure)
-	obj:Attribute("emergency", emergency)
-	obj:Attribute("highway", highway)
-	obj:Attribute("office", office)
+	obj:Attribute("amenity", nilToEmptyStr(amenity))
+	obj:Attribute("shop", nilToEmptyStr(shop))
+	obj:Attribute("tourism", nilToEmptyStr(tourism))
+	obj:Attribute("man_made", nilToEmptyStr(historic))
+	obj:Attribute("historic", nilToEmptyStr(historic))
+	obj:Attribute("leisure", nilToEmptyStr(leisure))
+	obj:Attribute("emergency", nilToEmptyStr(emergency))
+	obj:Attribute("highway", nilToEmptyStr(highway))
+	obj:Attribute("office", nilToEmptyStr(office))
 	if catering_values[amenity] then
-		addAttributeOrNull(obj, "cuisine")
+		addAttributeOrEmptyStr(obj, "cuisine")
 	end
 	if sport_values[leisure] then
-		addAttributeOrNull(obj, "sport")
+		addAttributeOrEmptyStr(obj, "sport")
 	end
 	if amenity == "vending_machine" then
-		addAttributeOrNull(obj, "vending")
+		addAttributeOrEmptyStr(obj, "vending")
 	end
 	if tourism == "information" then
-		addAttributeOrNull(obj, "information")
+		addAttributeOrEmptyStr(obj, "information")
 	end
 	if man_made == "tower" then
-		addAttributeOrNull(obj, "tower:type")
+		addAttributeOrEmptyStr(obj, "tower:type")
 	end
 	if amenity == "recycling" then
 		addAttributeBoolean(obj, "recycling:glass_bottles")
@@ -925,10 +966,12 @@ function process_pois(obj, polygon)
 		addAttributeBoolean(obj, "atm")
 	end
 	if amenity == "place_of_worship" then
-		addAttributeOrNull(obj, "religion")
-		addAttributeOrNull(obj, "denomination")
+		addAttributeOrEmptyStr(obj, "religion")
+		addAttributeOrEmptyStr(obj, "denomination")
 	end
-	setNameAttributes(way)
+	setNameAttributes(obj)
+	setAddressAttributes(obj)
+	return true
 end
 
 function way_function(way)
@@ -1015,6 +1058,17 @@ function way_function(way)
 	-- Layer buildings
 	if is_area and way:Holds("building") then
 		process_buildings(way)
+	end
+
+	-- Layer pois
+	local is_poi = false
+	if is_area then
+		is_poi = process_pois(way, true)
+	end
+
+	-- Abort here if it was written as POI because Tilemaker cannot write a feature to two layers.
+	if is_poi then
+		return
 	end
 
 	-- Layer addresses
