@@ -2,7 +2,8 @@
     "layers": {
         "place_labels": {
             "minzoom": 3,
-            "maxzoom": 14
+            "maxzoom": 14,
+            "sort_z_level_ascending": false
         },
         "boundaries": {
             "minzoom": 0,
