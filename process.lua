@@ -816,6 +816,9 @@ function process_street_polygons(way)
 	elseif aeroway == "runway" then
 		mz = 11
 		kind = aeroway
+	elseif aeroway == "taxiway" then
+		mz = 13
+		kind = aeroway
 	end
 	if mz < inf_zoom then
 		way:Layer("street_polygons", true)
