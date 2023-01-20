@@ -165,7 +165,8 @@
         },
         "water_polygons_labels": {
             "minzoom": 14,
-            "maxzoom": 14
+            "maxzoom": 14,
+            "sort_z_level_ascending": false
         },
         "land": {
             "minzoom": 7,
