@@ -17,7 +17,7 @@
             "minzoom": 2,
             "maxzoom": 14,
             "source": "data/admin-points-4326/admin_points.shp",
-	    "source_columns": true
+        "source_columns": true
         },
         "addresses": {
             "minzoom": 14,
@@ -29,7 +29,7 @@
             "simplify_below": 14,
             "simplify_level": 0.0001,
             "simplify_ratio": 2,
-	    "combine_below": 15
+        "combine_below": 15
         },
         "water_lines_labels": {
             "minzoom": 4,
@@ -37,7 +37,7 @@
             "simplify_below": 14,
             "simplify_level": 0.0002,
             "simplify_ratio": 2,
-	    "combine_below": 15
+        "combine_below": 15
         },
         "dam_lines": {
             "minzoom": 12,
@@ -45,7 +45,7 @@
             "simplify_below": 14,
             "simplify_level": 0.0001,
             "simplify_ratio": 2,
-	    "combine_below": 15
+        "combine_below": 15
         },
         "dam_polygons": {
             "minzoom": 12,
@@ -148,7 +148,7 @@
             "minzoom": 8,
             "maxzoom": 14,
             "source": "data/water-polygons-split-4326/water_polygons.shp",
-	    "source_columns": true,
+        "source_columns": true,
             "simplify_below": 14,
             "simplify_level": 0.0001,
             "simplify_ratio": 2
@@ -157,11 +157,11 @@
             "minzoom": 0,
             "maxzoom": 7,
             "source": "data/simplified-water-polygons-split-4326/simplified_water_polygons.shp",
-	    "source_columns": true,
+        "source_columns": true,
             "simplify_below": 14,
             "simplify_level": 0.0001,
             "simplify_ratio": 2,
-	    "write_to": "ocean"
+        "write_to": "ocean"
         },
         "water_polygons_labels": {
             "minzoom": 14,
