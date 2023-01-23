@@ -1,6 +1,7 @@
+-- SPDX-License-Identifier: FTWPL
 -- Data processing for Geofabrik Vector Tiles schema
 -- Copyright (c) 2021, Geofabrik GmBH
--- All rights reserved.
+-- Licensed under FTWPL
 
 -- Enter/exit Tilemaker
 function init_function()
