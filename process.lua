@@ -580,8 +580,9 @@ function process_boundary_lines(way)
 		mz = 7
 	end
 	local maritime = way:Find("maritime")
+	local natural = way:Find("natural")
 	local maritimeBool = false
-	if maritime == "yes" then
+	if maritime == "yes" or natural == "coastline" then
 		maritimeBool = true
 	end
 	if mz < inf_zoom then
