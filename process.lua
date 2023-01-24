@@ -63,7 +63,7 @@ poi_man_made_values = Set { "surveillance", "tower", "windmill", "lighthouse", "
 	"water_well", "watermill", "water_works" }
 poi_historic_values = Set { "monument", "memorial", "artwork", "castle", "ruins", "archaelogical_site",
 	"wayside_cross", "wayside_shrine", "battlefield", "fort" }
-poi_emergency_values = Set { "phone", "fire_hydrant" }
+poi_emergency_values = Set { "phone", "fire_hydrant", "defibrillator" }
 poi_highway_values = Set { "emergency_access_point" }
 poi_office_values = Set { "diplomatic" }
 
