@@ -993,8 +993,13 @@ function way_function(way)
 	local area_tag = way:Find("area")
 	local type_tag = way:Find("type")
 	local boundary_tag = way:Find("boundary")
+	local area_aeroway_tag = way:Find("area:aeroway")
 	-- Way/Relation is explicitly tagged as area.
-	local area_yes_multi_boundary = (area_tag == "yes" or type_tag == "multipolygon" or type_tag == "boundary")
+	local area_yes_multi_boundary = (
+		area_tag == "yes"
+		or type_tag == "multipolygon" or type_tag == "boundary"
+		or area_aeroway_tag == "runway" or area_aeroway_tag == "taxiway"
+		)
 	-- Boolean flags for closed ways in cases where features can be mapped as line or area
 	-- If closed ways are assumed to be polygons by default except tagged with area=no
 	local is_area = (area_yes_multi_boundary or (area > 0 and area_tag ~= "no"))
