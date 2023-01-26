@@ -816,7 +816,7 @@ end
 
 function process_street_polygons(way)
 	local highway = way:Find("highway")
-	local aeroway = way:Find("aeroway")
+	local aeroway = way:Find("area:aeroway")
 	local surface = way:Find("surface")
 	local service = way:Find("service")
 	local kind = nil
@@ -1045,7 +1045,7 @@ function way_function(way)
 	end
 
 	-- Layer street_polygons, street_polygons_labels
-	if is_area_default_linear and (way:Holds("highway") or way:Holds("aeroway")) then
+	if is_area_default_linear and (way:Holds("highway") or way:Holds("area:aeroway")) then
 		process_street_polygons(way)
 	end
 
