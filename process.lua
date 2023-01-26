@@ -326,13 +326,22 @@ function node_function(node)
 		setNameAttributes(node)
 		node:Attribute("ref", node:Find("ref"))
 	end
-	-- Layer public_transport 
+	-- Layer public_transport
 	local railway = node:Find("railway")
 	local aeroway = node:Find("aeroway")
 	local aerialway = node:Find("aerialway")
 	local amenity = node:Find("amenity")
 	local highway = node:Find("highway")
-	if railway == "station" or railway == "halt" or railway == "tram_stop" or highway == "bus_stop" or amenity == "bus_station" or amenity == "ferry_terminal" or aeroway == "aerodrome" or aerialway == "station" then
+
+	if railway == "station"
+        or railway == "halt"
+        or railway == "tram_stop"
+        or highway == "bus_stop"
+        or amenity == "bus_station"
+        or amenity == "ferry_terminal"
+        or aeroway == "aerodrome"
+        or aeroway == "helipad"
+        or aerialway == "station" then
 		process_public_transport_layer(node, false)
 	end
 
@@ -1050,13 +1059,22 @@ function way_function(way)
 		process_ferries(way)
 	end
 
-	-- Layer public_transport 
+	-- Layer public_transport
 	local railway = way:Find("railway")
 	local aeroway = way:Find("aeroway")
 	local highway = way:Find("highway")
 	local amenity = way:Find("amenity")
 	local aeroway = way:Find("aeroway")
-	if is_area and (railway == "station" or railway == "halt" or aeroway == "aerodrome" or highway == "bus_stop" or amenity == "bus_station" or amenity == "ferry_terminal") then
+	if is_area
+		and (
+			railway == "station"
+			or railway == "halt"
+			or aeroway == "aerodrome"
+			or aeroway == "helipad"
+			or highway == "bus_stop"
+			or amenity == "bus_station"
+			or amenity == "ferry_terminal"
+		) then
 		process_public_transport_layer(way, true)
 	end
 
