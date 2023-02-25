@@ -1,6 +1,7 @@
+-- SPDX-License-Identifier: FTWPL
 -- Data processing for Geofabrik Vector Tiles schema
 -- Copyright (c) 2021, Geofabrik GmBH
--- All rights reserved.
+-- Licensed under FTWPL
 
 -- Enter/exit Tilemaker
 function init_function()
@@ -42,7 +43,7 @@ end
 poi_amenity_values = Set { "police", "fire_station", "post_box", "post_office", "telephone",
 	"library", "townhall", "courthouse", "prison", "embassy", "community_centre", "nursing_home",
 	"arts_centre", "grave_yard", "marketplace", "recycling", "university", "school", "college", "public_building",
-	"pharmacy", "hospital", "clinic", "doctors", "denitst", "veterinary", "theatre", "nightclub", "cinema",
+	"pharmacy", "hospital", "clinic", "doctors", "dentist", "veterinary", "theatre", "nightclub", "cinema",
 	"restaurant", "fast_food", "cafe", "pub", "bar", "foot_court", "biergarten", "shelter",
 	"car_rental", "car_wash", "car_sharing", "bicycle_rental", "vending_machine", "bank", "atm",
 	"toilets", "bench", "drinking_water", "fountain", "hunting_stand", "waste_basket", "place_of_worship" }
@@ -62,7 +63,7 @@ poi_man_made_values = Set { "surveillance", "tower", "windmill", "lighthouse", "
 	"water_well", "watermill", "water_works" }
 poi_historic_values = Set { "monument", "memorial", "artwork", "castle", "ruins", "archaelogical_site",
 	"wayside_cross", "wayside_shrine", "battlefield", "fort" }
-poi_emergency_values = Set { "phone", "fire_hydrant" }
+poi_emergency_values = Set { "phone", "fire_hydrant", "defibrillator" }
 poi_highway_values = Set { "emergency_access_point" }
 poi_office_values = Set { "diplomatic" }
 
@@ -325,13 +326,22 @@ function node_function(node)
 		setNameAttributes(node)
 		node:Attribute("ref", node:Find("ref"))
 	end
-	-- Layer public_transport 
+	-- Layer public_transport
 	local railway = node:Find("railway")
 	local aeroway = node:Find("aeroway")
 	local aerialway = node:Find("aerialway")
 	local amenity = node:Find("amenity")
 	local highway = node:Find("highway")
-	if railway == "station" or railway == "halt" or railway == "tram_stop" or highway == "bus_stop" or amenity == "bus_station" or amenity == "ferry_terminal" or aeroway == "aerodrome" or aerialway == "station" then
+
+	if railway == "station"
+        or railway == "halt"
+        or railway == "tram_stop"
+        or highway == "bus_stop"
+        or amenity == "bus_station"
+        or amenity == "ferry_terminal"
+        or aeroway == "aerodrome"
+        or aeroway == "helipad"
+        or aerialway == "station" then
 		process_public_transport_layer(node, false)
 	end
 
@@ -579,8 +589,9 @@ function process_boundary_lines(way)
 		mz = 7
 	end
 	local maritime = way:Find("maritime")
+	local natural = way:Find("natural")
 	local maritimeBool = false
-	if maritime == "yes" then
+	if maritime == "yes" or natural == "coastline" then
 		maritimeBool = true
 	end
 	local disputed = way:Find("disputed")
@@ -811,7 +822,7 @@ end
 
 function process_street_polygons(way)
 	local highway = way:Find("highway")
-	local aeroway = way:Find("aeroway")
+	local aeroway = way:Find("area:aeroway")
 	local surface = way:Find("surface")
 	local service = way:Find("service")
 	local kind = nil
@@ -988,8 +999,13 @@ function way_function(way)
 	local area_tag = way:Find("area")
 	local type_tag = way:Find("type")
 	local boundary_tag = way:Find("boundary")
+	local area_aeroway_tag = way:Find("area:aeroway")
 	-- Way/Relation is explicitly tagged as area.
-	local area_yes_multi_boundary = (area_tag == "yes" or type_tag == "multipolygon" or type_tag == "boundary")
+	local area_yes_multi_boundary = (
+		area_tag == "yes"
+		or type_tag == "multipolygon" or type_tag == "boundary"
+		or area_aeroway_tag == "runway" or area_aeroway_tag == "taxiway"
+		)
 	-- Boolean flags for closed ways in cases where features can be mapped as line or area
 	-- If closed ways are assumed to be polygons by default except tagged with area=no
 	local is_area = (area_yes_multi_boundary or (area > 0 and area_tag ~= "no"))
@@ -1040,7 +1056,7 @@ function way_function(way)
 	end
 
 	-- Layer street_polygons, street_polygons_labels
-	if is_area_default_linear and (way:Holds("highway") or way:Holds("aeroway")) then
+	if is_area_default_linear and (way:Holds("highway") or way:Holds("area:aeroway")) then
 		process_street_polygons(way)
 	end
 
@@ -1054,13 +1070,22 @@ function way_function(way)
 		process_ferries(way)
 	end
 
-	-- Layer public_transport 
+	-- Layer public_transport
 	local railway = way:Find("railway")
 	local aeroway = way:Find("aeroway")
 	local highway = way:Find("highway")
 	local amenity = way:Find("amenity")
 	local aeroway = way:Find("aeroway")
-	if is_area and (railway == "station" or railway == "halt" or aeroway == "aerodrome" or highway == "bus_stop" or amenity == "bus_station" or amenity == "ferry_terminal") then
+	if is_area
+		and (
+			railway == "station"
+			or railway == "halt"
+			or aeroway == "aerodrome"
+			or aeroway == "helipad"
+			or highway == "bus_stop"
+			or amenity == "bus_station"
+			or amenity == "ferry_terminal"
+		) then
 		process_public_transport_layer(way, true)
 	end
 
