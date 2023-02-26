@@ -235,7 +235,7 @@ function process_place_layer(node)
 		if population == "" then
 			population = "0"
 		end
-	elseif  place == "isolated_dwelling" or place == "farm"  then
+	elseif place == "isolated_dwelling" or place == "farm"  then
 		mz = 10
 		if population == "" then
 			population = "5"
@@ -259,7 +259,7 @@ function process_place_layer(node)
 		local populationNum = tonumber(population)
 		if populationNum ~= nil then
 			node:AttributeNumeric("population", populationNum)
-		        node:ZOrder(populationNum)
+			node:ZOrder(populationNum)
 		end
 	end
 end
@@ -310,7 +310,7 @@ function process_public_transport_layer(obj, is_area)
 	end
 	setNameAttributes(obj)
 end
-	
+
 
 function node_function(node)
 	-- Layer place_labels
