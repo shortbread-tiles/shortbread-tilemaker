@@ -594,11 +594,21 @@ function process_boundary_lines(way)
 	if maritime == "yes" or natural == "coastline" then
 		maritimeBool = true
 	end
+	local disputed = way:Find("disputed") -- disputed=*
+	local boundary = way:FindInRelation("boundary") -- boundary=disputed
+	local disputedBool = false
+	if disputed == "disputed" then
+		disputedBool = true
+	end
+	if disputed == "yes" then
+		disputedBool = true
+	end
 	if mz < inf_zoom then
 		way:Layer("boundaries", false)
 		way:MinZoom(mz)
 		way:AttributeNumeric("admin_level", min_admin_level)
 		way:AttributeBoolean("maritime", maritimeBool)
+		way:AttributeBoolean("disputed", disputedBool)
 	end
 end
 
