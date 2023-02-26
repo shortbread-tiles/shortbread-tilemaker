@@ -163,7 +163,7 @@ function setZOrder(way, is_rail, ignore_bridge)
 		hwClass = 13
 	elseif is_rail and railway == "rail" then
 		hwClass = 12
-	elseif is_rail and (israilway == "subway" or railway == "light_rail" or railway == "tram" or railway == "funicular" or railway == "monorail") then
+	elseif is_rail and (railway == "subway" or railway == "light_rail" or railway == "tram" or railway == "funicular" or railway == "monorail") then
 		hwClass = 11
 	elseif highway == "motorway" then
 		hwClass = 10
