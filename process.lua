@@ -163,17 +163,17 @@ function setZOrder(way, is_rail, ignore_bridge)
 		hwClass = 13
 	elseif is_rail and railway == "rail" then
 		hwClass = 12
-	elseif is_rail and (israilway == "subway" or railway == "light_rail" or railway == "tram" or railway == "funicular" or railway == "monorail") then
+	elseif is_rail and (railway == "subway" or railway == "light_rail" or railway == "tram" or railway == "funicular" or railway == "monorail") then
 		hwClass = 11
 	elseif highway == "motorway" then
 		hwClass = 10
-	elseif highway == "trunk"  then
+	elseif highway == "trunk" then
 		hwClass = 9
-	elseif highway == "primary"  then
+	elseif highway == "primary" then
 		hwClass = 8
-	elseif highway == "secondary"  then
+	elseif highway == "secondary" then
 		hwClass = 7
-	elseif highway == "tertiary"  then
+	elseif highway == "tertiary" then
 		hwClass = 6
 	elseif highway == "unclassified" or highway == "residential" or highway == "road" or highway == "motorway_link" or highway == "trunk_link" or highway == "primary_link" or highway == "secondary_link" or highway == "tertiary_link" or highway == "busway" or highway == "bus_guideway" then
 		hwClass = 5
@@ -235,7 +235,7 @@ function process_place_layer(node)
 		if population == "" then
 			population = "0"
 		end
-	elseif  place == "isolated_dwelling" or place == "farm"  then
+	elseif place == "isolated_dwelling" or place == "farm" then
 		mz = 10
 		if population == "" then
 			population = "5"
@@ -259,7 +259,7 @@ function process_place_layer(node)
 		local populationNum = tonumber(population)
 		if populationNum ~= nil then
 			node:AttributeNumeric("population", populationNum)
-		        node:ZOrder(populationNum)
+			node:ZOrder(populationNum)
 		end
 	end
 end
@@ -310,7 +310,6 @@ function process_public_transport_layer(obj, is_area)
 	end
 	setNameAttributes(obj)
 end
-	
 
 function node_function(node)
 	-- Layer place_labels
@@ -334,14 +333,14 @@ function node_function(node)
 	local highway = node:Find("highway")
 
 	if railway == "station"
-        or railway == "halt"
-        or railway == "tram_stop"
-        or highway == "bus_stop"
-        or amenity == "bus_station"
-        or amenity == "ferry_terminal"
-        or aeroway == "aerodrome"
-        or aeroway == "helipad"
-        or aerialway == "station" then
+	or railway == "halt"
+	or railway == "tram_stop"
+	or highway == "bus_stop"
+	or amenity == "bus_station"
+	or amenity == "ferry_terminal"
+	or aeroway == "aerodrome"
+	or aeroway == "helipad"
+	or aerialway == "station" then
 		process_public_transport_layer(node, false)
 	end
 
