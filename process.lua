@@ -181,7 +181,7 @@ function setZOrder(way, is_rail, ignore_bridge)
 		hwClass = 4
 	elseif highway == "service" then
 		hwClass = 3
-	elseif highway == "foootway" or highway == "bridleway" or highway == "cycleway" or highway == "path" or highway == "track" then
+	elseif highway == "footway" or highway == "bridleway" or highway == "cycleway" or highway == "path" or highway == "track" then
 		hwClass = 2
 	elseif highway == "steps" or highway == "platform" then
 		hwClass = 1
