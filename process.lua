@@ -617,7 +617,7 @@ function toTunnelBool(tunnel, covered)
 end
 
 function toBridgeBool(bridge)
-	if bridge == "yes" then
+	if bridge == "yes" or bridge == "viaduct" or bridge == "boardwalk" or bridge == "cantilever" or bridge == "covered" or bridge == "low_water_crossing" or bridge == "movable" or bridge == "trestle" then
 		return true
 	end
 	return false
