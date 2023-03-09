@@ -563,6 +563,7 @@ function process_boundary_lines(way)
 		return
 	end
 	local min_admin_level = 99
+	local disputedBool = false
 	while true do
 		local rel = way:NextRelation()
 		if not rel and min_admin_level == 99 then
@@ -579,6 +580,9 @@ function process_boundary_lines(way)
 		if al ~= nil and al >= 2 then
 			min_admin_level = math.min(min_admin_level, al)
 		end
+		if boundary == "disputed" then
+			disputedBool = true
+		end
 	end
 
 	local mz = inf_zoom
@@ -593,11 +597,15 @@ function process_boundary_lines(way)
 	if maritime == "yes" or natural == "coastline" then
 		maritimeBool = true
 	end
+	if way:Find("disputed") == "yes" then
+		disputedBool = true
+	end
 	if mz < inf_zoom then
 		way:Layer("boundaries", false)
 		way:MinZoom(mz)
 		way:AttributeNumeric("admin_level", min_admin_level)
 		way:AttributeBoolean("maritime", maritimeBool)
+		way:AttributeBoolean("disputed", disputedBool)
 	end
 end
 
@@ -1106,11 +1114,23 @@ function way_function(way)
 	end
 end
 
+-- Check that admin_level is 2, 3 or 4
+function admin_level_valid(admin_level, is_unset_valid)
+	return (is_unset_valid and admin_level == "") or admin_level == "2" or admin_level == "3" or admin_level == "4"
+end
+
 ---- Accept boundary relations
 function relation_scan_function(relation)
-	if relation:Find("type") == "boundary" and relation:Find("boundary") == "administrative" then
-		admin_level = relation:Find("admin_level")
-		if admin_level == "2" or admin_level == "3" or admin_level == "4" then
+	if relation:Find("type") ~= "boundary" then
+		return
+	end
+	local boundary = relation:Find("boundary")
+	if boundary == "administrative" then
+		if admin_level_valid(relation:Find("admin_level"), false) then
+			relation:Accept()
+		end
+	elseif boundary == "disputed" then
+		if admin_level_valid(relation:Find("admin_level"), true) then
 			relation:Accept()
 		end
 	end
