@@ -1114,6 +1114,11 @@ function way_function(way)
 	end
 end
 
+-- Check that admin_level is 2, 3 or 4
+function admin_level_valid(admin_level, is_unset_valid)
+	return (is_unset_valid and admin_level == "") or admin_level == "2" or admin_level == "3" or admin_level == "4"
+end
+
 ---- Accept boundary relations
 function relation_scan_function(relation)
 	if relation:Find("type") ~= "boundary" then
@@ -1121,12 +1126,13 @@ function relation_scan_function(relation)
 	end
 	local boundary = relation:Find("boundary")
 	if boundary == "administrative" then
-		admin_level = relation:Find("admin_level")
-		if admin_level == "2" or admin_level == "3" or admin_level == "4" then
+		if admin_level_valid(relation:Find("admin_level"), false) then
 			relation:Accept()
 		end
 	elseif boundary == "disputed" then
-		relation:Accept()
+		if admin_level_valid(relation:Find("admin_level"), true) then
+			relation:Accept()
+		end
 	end
 end
 
