@@ -54,7 +54,7 @@ sport_values = Set { "pitch", "sports_centre" }
 poi_tourism_values = Set { "hotel", "motel", "bed_and_breakfast", "guest_house", "hostel", "chalet",
 	"camp_site", "alpine_hut", "caravan_site", "information", "picnic_site", "viewpoint", "zoo", "theme_park" }
 poi_shop_values = Set { "supermarket", "bakery", "kiosk", "mall", "department_store", "general",
-	"convinience", "clothes", "florist", "chemist", "books", "butcher", "shoes", "alcohol",
+	"convenience", "clothes", "florist", "chemist", "books", "butcher", "shoes", "alcohol",
 	"beverages", "optician", "jewelry", "gift", "sports", "stationery", "outdoor", "mobile_phone",
 	"toys", "newsagent", "greengrocer", "beauty", "video", "car", "bicycle", "doityourself",
 	"hardware", "furniture", "computer", "garden_centre", "hairdresser", "travel_agency", "laundry",
