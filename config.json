@@ -190,9 +190,9 @@
         "basezoom": 14,
         "include_ids": false,
         "combine_below": 14,
-        "name": "Tilemaker to Geofabrik Vector Tiles schema",
-        "version": "3.0",
-        "description": "Tile config for simple vector tiles schema",
+        "name": "Shortbread",
+        "version": "1.0",
+        "description": "Tile config for a simple vector tiles schema",
         "compress": "gzip",
         "filemetadata": {
             "tilejson": "2.0.0",
