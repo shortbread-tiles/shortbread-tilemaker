@@ -744,7 +744,7 @@ function process_streets(way)
 		end
 		setZOrder(way, rail, false)
 	end
-	if mz < 9 then
+	if mz <= 10 then
 		way:Layer("streets_low", false)
 		way:MinZoom(mz)
 		way:Attribute("kind", kind)
