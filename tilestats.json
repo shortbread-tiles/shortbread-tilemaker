@@ -1,6 +1,6 @@
 {
     "tilestats": {
-        "layerCount": 22,
+        "layerCount": 26,
         "layers": [
             {
                 "layer": "place_labels",
@@ -47,6 +47,18 @@
                 "geometry": "Polygon"
             },
             {
+                "layer": "street_polygons",
+                "geometry": "Polygon"
+            },
+            {
+                "layer": "streets_polygons_labels",
+                "geometry": "Point"
+            },
+            {
+                "layer": "ferries",
+                "geometry": "LineString"
+            },
+            {
                 "layer": "streets",
                 "geometry": "LineString"
             },
@@ -89,6 +101,10 @@
             {
                 "layer": "sites",
                 "geometry": "Polygon"
+            },
+            {
+                "layer": "pois",
+                "geometry": "Point"
             }
         ]
     }
