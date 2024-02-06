@@ -706,49 +706,25 @@ function process_streets()
 	local oneway = Find("oneway")
 	local onewayBool = not rail and isOneway(oneway)
 	local reverseOnewayBool = not rail and isReverseOneway(oneway)
-	if mz <= 13 then
-		Layer("streets_med", false)
-		MinZoom(mz)
-		Attribute("kind", kind)
-		AttributeBoolean("link", link)
-		Attribute("surface", surface)
-		AttributeBoolean("tunnel", tunnelBool)
-		AttributeBoolean("bridge", bridgeBool)
-		if tracktype ~= "" then
-			Attribute("tracktype", tracktype)
-		end
-		AttributeBoolean("rail", rail)
-		if service ~= "" then
-			Attribute("service", service)
-		end
-		setZOrder(rail, false)
-	end
 	if mz < inf_zoom then
 		Layer("streets", false)
 		MinZoom(mz)
 		Attribute("kind", kind)
-		AttributeBoolean("link", link)
-		Attribute("surface", surface)
-		Attribute("bicycle", bicycle)
-		Attribute("horse", horse)
-		AttributeBoolean("tunnel", tunnelBool)
-		AttributeBoolean("bridge", bridgeBool)
-		AttributeBoolean("oneway", onewayBool)
-		AttributeBoolean("oneway_reverse", reverseOnewayBool)
+		AttributeBoolean("link", link, 11)
+		Attribute("surface", surface, 11)
+		Attribute("bicycle", bicycle, 14)
+		Attribute("horse", horse, 14)
+		AttributeBoolean("tunnel", tunnelBool, 11)
+		AttributeBoolean("bridge", bridgeBool, 11)
+		AttributeBoolean("oneway", onewayBool, 14)
+		AttributeBoolean("oneway_reverse", reverseOnewayBool, 14)
 		if tracktype ~= "" then
-			Attribute("tracktype", tracktype)
+			Attribute("tracktype", tracktype, 11)
 		end
 		AttributeBoolean("rail", rail)
 		if service ~= "" then
-			Attribute("service", service)
+			Attribute("service", service, 11)
 		end
-		setZOrder(rail, false)
-	end
-	if mz <= 10 then
-		Layer("streets_low", false)
-		MinZoom(mz)
-		Attribute("kind", kind)
-		AttributeBoolean("rail", rail)
 		setZOrder(rail, false)
 	end
 end
