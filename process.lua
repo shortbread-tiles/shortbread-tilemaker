@@ -396,8 +396,8 @@ function process_water_polygons(way_area)
 	elseif is_river or waterway == "dock" or waterway == "canal" then
 		mz = math.max(4, zmin_for_area(0.1, way_area))
 		kind = waterway
-		if kind == "" then
-			kind = water
+                if is_river then
+			kind = "river"
 		end
 	end
 	if mz < inf_zoom then
