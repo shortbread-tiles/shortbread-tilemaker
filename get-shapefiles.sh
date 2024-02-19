@@ -8,7 +8,11 @@ function download_and_extract {
     START_DIR=$(pwd)
     cd data
     echo "Downloading $URL"
-    curl -z "$FILE" -LO "$URL"
+	CURL_TIME_COND_ARG="$FILE"
+	if [ ! -e "$FILE" ] ; then
+		CURL_TIME_COND_ARG="1 Jan 1970 00:00:00"
+	fi
+    curl --time-cond "$CURL_TIME_COND_ARG" -LO "$URL"
     unzip -o -u "$FILE"
     cd "$START_DIR"
 }
