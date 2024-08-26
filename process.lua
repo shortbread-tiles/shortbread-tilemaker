@@ -61,7 +61,7 @@ poi_shop_values = Set { "supermarket", "bakery", "kiosk", "mall", "department_st
 	"dry_cleaning" }
 poi_man_made_values = Set { "surveillance", "tower", "windmill", "lighthouse", "wastewater_plant",
 	"water_well", "watermill", "water_works" }
-poi_historic_values = Set { "monument", "memorial", "artwork", "castle", "ruins", "archaelogical_site",
+poi_historic_values = Set { "monument", "memorial", "artwork", "castle", "ruins", "archaeological_site",
 	"wayside_cross", "wayside_shrine", "battlefield", "fort" }
 poi_emergency_values = Set { "phone", "fire_hydrant", "defibrillator" }
 poi_highway_values = Set { "emergency_access_point" }
