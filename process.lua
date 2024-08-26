@@ -691,9 +691,9 @@ function process_streets()
 	end
 	if kind ~= "" and surface ~= "" then
 		if surface == "unpaved" or surface == "compacted" or surface == "dirt" or surface == "earth" or surface == "fine_gravel" or surface == "grass" or surface == "grass_paver" or surface == "gravel" or surface == "ground" or surface == "mud" or surface == "pebblestone" or surface == "salt" or surface == "woodchips" or surface == "clay" then
-			suface = "unpaved"
+			surface = "unpaved"
 		elseif surface == "paved" or surface == "asphalt" or surface == "cobblestone" or surface == "cobblestone:flattended" or surface == "sett" or surface == "concrete" or surface == "concrete:lanes" or surface == "concrete:plates" or surface == "paving_stones" then
-			suface = "unpaved"
+			surface = "unpaved"
 		else
 			surface = ""
 		end
