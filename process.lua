@@ -51,7 +51,7 @@ catering_values = Set { "restaurant", "fast_food", "pub", "bar", "cafe" }
 poi_leisure_values = Set { "playground", "dog_park", "sports_centre", "pitch", "swimming_pool", "water_park",
 	"golf_course", "stadium", "ice_rink" }
 sport_values = Set { "pitch", "sports_centre" }
-poi_tourism_values = Set { "hotel", "motel", "bed_and_breakfast", "guest_house", "hostel", "chalet",
+poi_tourism_values = Set { "hotel", "motel", "artwork", "bed_and_breakfast", "guest_house", "hostel", "chalet",
 	"camp_site", "alpine_hut", "caravan_site", "information", "picnic_site", "viewpoint", "zoo", "theme_park" }
 poi_shop_values = Set { "supermarket", "bakery", "kiosk", "mall", "department_store", "general",
 	"convenience", "clothes", "florist", "chemist", "books", "butcher", "shoes", "alcohol",
@@ -61,7 +61,7 @@ poi_shop_values = Set { "supermarket", "bakery", "kiosk", "mall", "department_st
 	"dry_cleaning" }
 poi_man_made_values = Set { "surveillance", "tower", "windmill", "lighthouse", "wastewater_plant",
 	"water_well", "watermill", "water_works" }
-poi_historic_values = Set { "monument", "memorial", "artwork", "castle", "ruins", "archaeological_site",
+poi_historic_values = Set { "monument", "memorial", "castle", "ruins", "archaeological_site",
 	"wayside_cross", "wayside_shrine", "battlefield", "fort" }
 poi_emergency_values = Set { "phone", "fire_hydrant", "defibrillator" }
 poi_highway_values = Set { "emergency_access_point" }
