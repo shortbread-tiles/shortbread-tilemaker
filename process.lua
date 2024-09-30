@@ -1153,9 +1153,9 @@ function attribute_function(attr, layer)
 	end
 	if layer == "boundary_labels" then
 		attributes = {}
-		attributes["admin_level"] = attr["admin_leve"]
+		attributes["admin_level"] = attr["admin_level"]
 		if attributes["admin_level"] == nil then
-			attributes["admin_level"] = attr["ADMIN_LEVE"]
+			attributes["admin_level"] = attr["ADMIN_LEVEL"]
 		end
 		attributes["admin_level"] = tonumber(attributes["admin_level"])
 		keys = {"name", "name_de", "name_en", "way_area"}
