@@ -1125,11 +1125,11 @@ function relation_function(relation)
 	local admin_level = Find("admin_level")
 	local name = Find("name")
 
-	if boundary == "administrative" and (admin_level == "2" or admin_level == "3" or admin_level == "4") then
+	if boundary == "administrative" and admin_level_valid(Find("admin_level"), false) then
 		LayerAsCentroid("boundary_labels")
 		MinZoom(2)
 		setNameAttributes()
-		Attribute("admin_level", admin_level)
+		AttributeNumeric("admin_level", admin_level)
 	end
 end
 
