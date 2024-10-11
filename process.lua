@@ -1119,6 +1119,20 @@ function admin_level_valid(admin_level, is_unset_valid)
 	return (is_unset_valid and admin_level == "") or admin_level == "2" or admin_level == "3" or admin_level == "4"
 end
 
+-- Add boundary labels
+function relation_function(relation)
+	local boundary = Find("boundary")
+	local admin_level = Find("admin_level")
+	local name = Find("name")
+
+	if boundary == "administrative" and (admin_level == "2" or admin_level == "3" or admin_level == "4") then
+		LayerAsCentroid("boundary_labels")
+		MinZoom(2)
+		setNameAttributes()
+		Attribute("admin_level", admin_level)
+	end
+end
+
 ---- Accept boundary relations
 function relation_scan_function()
 	if Find("type") ~= "boundary" then
@@ -1149,30 +1163,6 @@ function attribute_function(attr, layer)
 		attributes = {}
 		attributes["x"] = 0
 		attributes["y"] = 0
-		return attributes
-	end
-	if layer == "boundary_labels" then
-		attributes = {}
-		attributes["admin_level"] = attr["admin_leve"]
-		if attributes["admin_level"] == nil then
-			attributes["admin_level"] = attr["ADMIN_LEVE"]
-		end
-		attributes["admin_level"] = tonumber(attributes["admin_level"])
-		keys = {"name", "name_de", "name_en", "way_area"}
-		for index, value in ipairs(keys) do
-			if attr[value] == nil then
-				attributes[value] = attr[string.upper(value)]
-			else
-				attributes[value] = attr[value]
-			end
-		end
-		-- Fill with fallback values if empty
-		local name = attributes["name"]
-		local name_de = attributes["name_de"]
-		local name_en = attributes["name_en"]
-		attributes["name"] = fillWithFallback(name, name_en, name_de)
-		attributes["name_de"] = fillWithFallback(name_de, name, name_en)
-		attributes["name_en"] = fillWithFallback(name_en, name, name_de)
 		return attributes
 	end
 	return attr

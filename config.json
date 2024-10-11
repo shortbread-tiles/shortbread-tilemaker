@@ -15,9 +15,7 @@
         },
         "boundary_labels": {
             "minzoom": 2,
-            "maxzoom": 14,
-            "source": "data/admin-points-4326/admin_points.shp",
-            "source_columns": true
+            "maxzoom": 14
         },
         "addresses": {
             "minzoom": 14,
