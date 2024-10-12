@@ -1121,6 +1121,7 @@ end
 
 -- Add boundary labels
 function relation_function(relation)
+	local area = Area()
 	local boundary = Find("boundary")
 	local admin_level = Find("admin_level")
 	local name = Find("name")
@@ -1130,6 +1131,7 @@ function relation_function(relation)
 		MinZoom(2)
 		setNameAttributes()
 		AttributeNumeric("admin_level", admin_level)
+		Attribute("way_area", area / 10000)
 	end
 end
 
