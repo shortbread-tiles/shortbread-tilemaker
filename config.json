@@ -32,7 +32,7 @@
             "combine_below": 15
         },
         "water_lines_labels": {
-            "minzoom": 4,
+            "minzoom": 13,
             "maxzoom": 14,
             "simplify_below": 14,
             "simplify_level": 0.0002,
@@ -140,8 +140,8 @@
         "water_polygons": {
             "minzoom": 4,
             "maxzoom": 14,
-            "simplify_below": 14,
-            "simplify_level": 0.0001,
+            "simplify_below": 12,
+            "simplify_level": 0.00015,
             "simplify_ratio": 2
         },
         "ocean": {
@@ -164,7 +164,7 @@
             "write_to": "ocean"
         },
         "water_polygons_labels": {
-            "minzoom": 14,
+            "minzoom": 10,
             "maxzoom": 14,
             "sort_z_level_ascending": false
         },
