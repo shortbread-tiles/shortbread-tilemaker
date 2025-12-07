@@ -943,7 +943,7 @@ function process_pois(polygon)
 	local leisure = valueAcceptedOrNil(poi_leisure_values, Find("leisure"))
 	local emergency = valueAcceptedOrNil(poi_emergency_values, Find("emergency"))
 	local highway = valueAcceptedOrNil(poi_highway_values, Find("highway"))
-	local office = valueAcceptedOrNil(poi_highway_values, Find("office"))
+	local office = valueAcceptedOrNil(poi_office_values, Find("office"))
 	if amenity == nil and shop == nil and tourism == nil and historic == nil and leisure == nil and emergency == nil and highway == nil and office == nil then
 		return false
 	end
