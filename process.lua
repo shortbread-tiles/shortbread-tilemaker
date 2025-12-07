@@ -145,7 +145,7 @@ function setZOrder(is_rail, ignore_bridge)
 	local layer = tonumber(Find("layer"))
 	local zOrder = 0
 	local Z_STEP = 14
-	if not ignore_bridges and toBridgeBool() then
+	if not ignore_bridge and toBridgeBool() then
 		zOrder = zOrder + Z_STEP
 	elseif toTunnelBool() then
 		zOrder = zOrder - Z_STEP
