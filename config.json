@@ -92,7 +92,7 @@
             "maxzoom": 14
         },
         "streets": {
-            "minzoom": 14,
+            "minzoom": 5,
             "maxzoom": 14,
             "combine_below": 15
         },
