@@ -143,7 +143,7 @@
             "simplify_ratio": 2
         },
         "ocean": {
-            "minzoom": 0,
+            "minzoom": 8,
             "maxzoom": 14,
             "source": "data/water-polygons-split-4326/water_polygons.shp",
             "source_columns": true,
