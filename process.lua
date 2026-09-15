@@ -689,15 +689,6 @@ function process_streets()
 		kind = aeroway
 		mz = 13
 	end
-	if kind ~= "" and surface ~= "" then
-		if surface == "unpaved" or surface == "compacted" or surface == "dirt" or surface == "earth" or surface == "fine_gravel" or surface == "grass" or surface == "grass_paver" or surface == "gravel" or surface == "ground" or surface == "mud" or surface == "pebblestone" or surface == "salt" or surface == "woodchips" or surface == "clay" then
-			surface = "unpaved"
-		elseif surface == "paved" or surface == "asphalt" or surface == "cobblestone" or surface == "cobblestone:flattended" or surface == "sett" or surface == "concrete" or surface == "concrete:lanes" or surface == "concrete:plates" or surface == "paving_stones" then
-			surface = "unpaved"
-		else
-			surface = ""
-		end
-	end
 	local link = (highway == "motorway_link" or highway == "trunk_link" or highway == "primary_link" or highway == "secondary_link" or highway == "tertiary_link")
 	local layer = tonumber(Find("layer"))
 	if layer == nil then
