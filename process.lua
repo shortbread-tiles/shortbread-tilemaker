@@ -66,6 +66,21 @@ poi_historic_values = Set { "monument", "memorial", "castle", "ruins", "archaeol
 poi_emergency_values = Set { "phone", "fire_hydrant", "defibrillator" }
 poi_highway_values = Set { "emergency_access_point" }
 poi_office_values = Set { "diplomatic" }
+access_values = { yes = "yes",
+	designated = "yes",
+	permissive = "yes",
+	customers = "limited",
+	destination = "limited",
+	agricultural = "limited",
+	forestry = "limited",
+	delivery = "limited",
+	discouraged = "limited",
+	permit = "limited",
+	dismount = "no",
+	military = "no",
+	private = "no",
+	no = "no",
+}
 
 inf_zoom = 99
 
@@ -623,6 +638,38 @@ function toBridgeBool(bridge)
 	return false
 end
 
+-- Find the access value of the first OSM key which is set for the current OSM way.
+-- This function needs to be called with the OSM keys in correct order to be evaluated.
+-- Raw OSM tag values will be mapped from their raw OSM values to 'yes', 'limited' or 'no'
+-- according to the Shortbread schema definition.
+-- The result will be set as the attribute named like the first key in the list of arguments.
+--
+-- Examples:
+--
+-- `first_matching_access("bicycle", "vehicle", "access")`
+-- for a way with bicycle=designated, vehicle=no, access=yes
+-- will write the attribute "bicycle" with value "yes" on that vector tile feature.
+--
+-- `first_matching_access("bicycle", "vehicle", "access")`
+-- for a way with access=private
+-- will write the attribute "bicycle" with value "no" on that vector tile feature.
+--
+-- `first_matching_access("bicycle", "vehicle", "access")`
+-- for a way without access tags
+-- will not set the attribute "bicycle" on that vector tile feature.
+function find_and_set_access(...)
+	for i, key in ipairs({...}) do
+		local value = Find(key)
+		if value ~= "" then
+			local mapped = access_values[value]
+			if mapped ~= nil then
+				Attribute(select(1, ...), mapped)
+				return
+			end
+		end
+	end
+end
+
 function process_streets()
 	local min_zoom_layer = 5
 	local mz = inf_zoom
@@ -631,8 +678,6 @@ function process_streets()
 	local railway = Find("railway")
 	local aeroway = Find("aeroway")
 	local surface = Find("surface")
-	local bicycle = Find("bicycle")
-	local horse = Find("horse")
 	local tracktype = Find("tracktype")
 	local tunnelBool = toTunnelBool(Find("tunnel"), Find("covered"))
 	local covered = Find("covered")
@@ -640,6 +685,7 @@ function process_streets()
 	local bridgeBool = toBridgeBool(Find("bridge"))
 	local name = Find("name")
 	local rail = false
+	local is_road = true
 	if name == "" then
 		name = Find("ref")
 	end
@@ -675,18 +721,22 @@ function process_streets()
 	elseif (railway == "rail" or railway == "narrow_gauge") and service == "" then
 		kind = railway
 		rail = true
+		is_road = false
 		mz = 8
 	elseif ((railway == "rail" or railway == "narrow_gauge") and service ~= "")
 		or railway == "light_rail" or railway == "tram" or railway == "subway"
 		or railway == "funicular" or railway == "monorail" then
 		kind = railway
 		rail = true
+		is_road = false
 		mz = 10
 	elseif aeroway == "runway" then
 		kind = aeroway
+		is_road = false
 		mz = 11
 	elseif aeroway == "taxiway" then
 		kind = aeroway
+		is_road = false
 		mz = 13
 	end
 	local link = (highway == "motorway_link" or highway == "trunk_link" or highway == "primary_link" or highway == "secondary_link" or highway == "tertiary_link")
@@ -703,8 +753,12 @@ function process_streets()
 		Attribute("kind", kind)
 		AttributeBoolean("link", link, 11)
 		Attribute("surface", surface, 11)
-		Attribute("bicycle", bicycle, 14)
-		Attribute("horse", horse, 14)
+		if is_road then
+			find_and_set_access("motorcar", "motor_vehicle", "vehicle", "access")
+			find_and_set_access("bicycle", "vehicle", "access")
+			find_and_set_access("foot", "access")
+			find_and_set_access("horse", "access")
+		end
 		AttributeBoolean("tunnel", tunnelBool, 11)
 		AttributeBoolean("bridge", bridgeBool, 11)
 		AttributeBoolean("oneway", onewayBool, 14)
