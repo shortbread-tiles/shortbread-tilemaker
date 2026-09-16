@@ -1,0 +1,43 @@
+-- SPDX-License-Identifier: FTWPL
+-- Data processing for Geofabrik Vector Tiles schema
+-- Copyright (c) 2021-2026, Geofabrik GmBH
+-- Licensed under FTWPL
+
+-- Sample configuration for languages to support
+
+-- The languages table contains a table per language to support.
+-- The keys are the language code used by OpenStreetMap, e.g. "en" for English.
+-- The values are tables. Use empty tables if you want the value of name:xx=*
+-- to be written to the attribute name_xx. Use a table with a key "fallback"
+-- if you want to provide an array of fallback keys. They will be read in the
+-- provided order.
+--
+-- Fallback keys must
+-- be provided as full OSM keys ("name:xx", not "xx"). You can access any tag here,
+-- e.g. official_name:xx=* as a fallback if name:xx=* is not set and you wish to have
+-- as much localised names as possible in your vectortiles even if they are outdated.
+local languages = {
+	-- Add English (en). This will write the value of name:en
+	-- to the attribute name_en. If no name:en=* is set, Tilemaker will
+	-- try name:de=*, name:fr=*, int_name=* and name=* in the given order as fallbacks.
+	en = {
+		fallback = { "name:de", "name:fr", "int_name", "name" },
+	},
+	-- Add German (de) using name:en, name:fr, int_name and name as fallbacks.
+	de = {
+		fallback = { "name:en", "name:fr", "int_name", "name" },
+	},
+	-- Add Russian without any fallback. If an OSM object has no name:ru,
+	-- no name_ru attribute will be written.
+	ru = {
+		fallback = { },
+	},
+	-- Add Ukrainian without any fallback (alternative notation).
+	uk = { },
+	-- Note: You can't set a value to nil. Lua will skip this entry.
+	-- Following line will cause Esperanto to be ignored.
+	eo = nil,
+}
+
+-- Do not remove return statement.
+return languages

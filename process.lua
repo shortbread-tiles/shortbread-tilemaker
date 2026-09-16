@@ -1,7 +1,15 @@
 -- SPDX-License-Identifier: FTWPL
 -- Data processing for Geofabrik Vector Tiles schema
--- Copyright (c) 2021, Geofabrik GmBH
+-- Copyright (c) 2021-2026, Geofabrik GmBH
 -- Licensed under FTWPL
+
+-- Load language configuration and log if it is missing.
+local ok, languages = pcall(require, "languages")
+if not (ok) then
+	io.stderr:write("Warning: Failed to load languages.lua, setting name attribute only.\n" .. tostring(languages) .. "\n")
+	-- If languages.lua is not provided, do not add any languages at all.
+	languages = { }
+end
 
 -- Enter/exit Tilemaker
 function init_function()
@@ -94,14 +102,30 @@ function fillWithFallback(value1, value2, value3)
 	return value3
 end
 
+-- Write the value of key as attribute if the key is set on the current OSM
+-- object. fallback_keys can be nil if there is no fallback.
+function writeNameWithFallback(key, attribute, fallback_keys)
+	if Holds(key) then
+		Attribute(attribute, Find(key))
+		return
+	end
+	if fallback_keys == nil then
+		return
+	end
+	for i, k in ipairs(fallback_keys) do
+		if Holds(k) then
+			Attribute(attribute, Find(k))
+			return
+		end
+	end
+end
+
 -- Set name, name_en, and name_de on any object
 function setNameAttributes()
-	local name = Find("name")
-	local name_de = Find("name:de")
-	local name_en = Find("name:en")
-	Attribute("name", fillWithFallback(name, name_en, name_de))
-	Attribute("name_de", fillWithFallback(name_de, name, name_en))
-	Attribute("name_en", fillWithFallback(name_en, name, name_de))
+	writeNameWithFallback("name", "name")
+	for lang, settings in pairs(languages) do
+		writeNameWithFallback("name:" .. lang, "name_" .. lang, settings.fallback)
+	end
 end
 
 -- Return true if way is oneway

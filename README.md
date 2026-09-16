@@ -6,6 +6,20 @@ vector tiles in the Shortbread schema.
 * [Instructions](https://shortbread-tiles.org/make-vectortiles/)
 * [Schema documentation](https://shortbread-tiles.org/schema/)
 
+## Supported Languages
+
+Starting with version 1.1 Shortbread specification says that any object which
+has a `name` tag written as attribute `name` to the vectortiles may have
+additional languages as `name_xx` attributes. They represent the value of
+`name:xx=*` tags in OSM. The specification do not prescribe which languages to
+support. Language support itself is optional.
+
+When you create vector tiles using this implementation, you may decide
+yourself which languages you would like to include. By default, no
+additional languages are enabled. You can provide a languages.lua file
+where you define the languages to support and rules for fallback if they
+are absent. See `languages.lua.sample` for details of configuration and examples.
+
 ## Authors
 
 This set of configuration files has been created for Geofabrik by Michael Reichert 
