@@ -1076,7 +1076,10 @@ function way_function()
 	-- island mames into places layer
 	-- because not all have name as point
 	if place == "island" then
-		LayerAsCentroid("place_labels", "polylabel", "label")
+		-- We don't use relation members with role "label" because almost all place=island
+		-- are relations with type=multipolygon. Nodes are not permitted as members in these
+		-- relations.
+		LayerAsCentroid("place_labels", "polylabel")
 		Attribute("kind", place)
 		AttributeNumeric("area", area)
 		MinZoom(8)
@@ -1084,7 +1087,7 @@ function way_function()
 		local population = Find("population")
 		local populationNum = tonumber(population)
 		if populationNum ~= nil then
-			AttributeNumeric("population", populationNum)
+			AttributeNumeric("population", populationNum or 0)
 			ZOrder(populationNum)
 		end
 	end
