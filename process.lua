@@ -446,9 +446,13 @@ function process_water_polygons(way_area)
 		Attribute("kind", kind)
 		AttributeNumeric("way_area", way_area)
 		ZOrder(way_area)
-		if Holds("name") then
+		-- don't show river bodys and drop all small polygons always
+		if Holds("name") and not is_river and way_area > 2500000 then
+			-- show water poly labels only if they
+			-- are very big already
+			labelmz = math.max(mz, zmin_for_area(50, way_area))
 			LayerAsCentroid("water_polygons_labels")
-			MinZoom(14)
+			MinZoom(labelmz)
 			Attribute("kind", kind)
 			AttributeNumeric("way_area", way_area)
 			ZOrder(way_area)
