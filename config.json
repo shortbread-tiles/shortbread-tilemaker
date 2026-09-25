@@ -148,7 +148,7 @@
             "write_to": "ocean"
         },
         "water_polygons_labels": {
-            "minzoom": 14,
+            "minzoom": 4,
             "maxzoom": 14,
             "sort_z_level_ascending": false
         },

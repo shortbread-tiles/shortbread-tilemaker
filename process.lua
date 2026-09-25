@@ -415,6 +415,11 @@ function zmin_for_length(min_length_pixels)
 end
 
 function process_water_polygons(way_area)
+	-- Shortbread specification requires way_area for this layer to be in square meter in Web Mercator projection.
+	-- Web Mercator distortion factor is f = 1 / cos(lat).
+	-- Using f^2 based on the centroid of the polygon as factor is not precise but good enough given the limited API of Tilemaker.
+	local centroid = Centroid()
+	local way_area_merc = (1 / math.cos(math.rad(centroid[1])))^2 * way_area
 	local waterway = Find("waterway")
 	local natural = Find("natural")
 	local water = Find("water")
@@ -423,35 +428,32 @@ function process_water_polygons(way_area)
 	local kind = ""
 	local is_river = (natural == "water" and water == "river") or waterway == "riverbank"
 	if landuse == "reservoir" or landuse == "basin" or (natural == "water" and not is_river) or natural == "glacier" then
-		mz = math.max(4, zmin_for_area(0.01, way_area))
-		if mz >= 10 then
-			mz = math.max(10, zmin_for_area(0.1, way_area))
-		end
+		mz = math.min(math.max(4, zmin_for_area(1, way_area_merc)), 14)
 		if landuse == "reservoir" or landuse == "basin" then
 			kind = landuse
 		elseif natural == "water" or natural == "glacier" then
 			kind = natural
 		end
 	elseif is_river or waterway == "dock" or waterway == "canal" then
-		mz = math.max(4, zmin_for_area(0.1, way_area))
+		mz = math.min(math.max(4, zmin_for_area(1, way_area_merc)), 14)
 		kind = waterway
                 if is_river then
 			kind = "river"
 		end
 	end
 	if mz < inf_zoom then
-		local way_area = way_area
 		Layer("water_polygons", true)
 		MinZoom(mz)
 		Attribute("kind", kind)
-		AttributeNumeric("way_area", way_area)
-		ZOrder(way_area)
+		AttributeNumeric("way_area", way_area_merc)
+		ZOrder(way_area_merc)
 		if Holds("name") then
+		        mz = math.min(math.max(4, zmin_for_area(100, way_area_merc)), 14)
 			LayerAsCentroid("water_polygons_labels")
-			MinZoom(14)
+			MinZoom(mz)
 			Attribute("kind", kind)
-			AttributeNumeric("way_area", way_area)
-			ZOrder(way_area)
+			AttributeNumeric("way_area", way_area_merc)
+			ZOrder(way_area_merc)
 			setNameAttributes()
 		end
 	end
