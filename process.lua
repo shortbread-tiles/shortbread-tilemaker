@@ -419,6 +419,10 @@ function process_water_polygons(way_area)
 	-- Web Mercator distortion factor is f = 1 / cos(lat).
 	-- Using f^2 based on the centroid of the polygon as factor is not precise but good enough given the limited API of Tilemaker.
 	local centroid = Centroid()
+	if centroid == nil or centroid[1] == nil then
+		-- If the geometry is somehow broken, Centroid returns an empty array
+		return
+	end
 	local way_area_merc = (1 / math.cos(math.rad(centroid[1])))^2 * way_area
 	local waterway = Find("waterway")
 	local natural = Find("natural")
