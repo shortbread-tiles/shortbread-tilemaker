@@ -741,10 +741,7 @@ function process_streets()
 		elseif highway == "living_street" or highway == "pedestrian" or highway == "track" then
 			mz = 13
 			kind = highway
-		elseif highway == "service" then
-			mz = 14
-			kind = highway
-		elseif highway == "footway" or highway == "steps" or highway == "path" or highway == "cycleway" then
+		elseif highway == "service" or highway == "footway" or highway == "steps" or highway == "path" or highway == "cycleway" then
 			mz = 13
 			kind = highway
 		end
