@@ -214,7 +214,7 @@ function setZOrder(is_rail, ignore_bridge)
 		hwClass = 7
 	elseif highway == "tertiary" then
 		hwClass = 6
-	elseif highway == "unclassified" or highway == "residential" or highway == "road" or highway == "motorway_link" or highway == "trunk_link" or highway == "primary_link" or highway == "secondary_link" or highway == "tertiary_link" or highway == "busway" or highway == "bus_guideway" then
+	elseif highway == "unclassified" or highway == "residential" or highway == "motorway_link" or highway == "trunk_link" or highway == "primary_link" or highway == "secondary_link" or highway == "tertiary_link" or highway == "busway" or highway == "bus_guideway" then
 		hwClass = 5
 	elseif highway == "living_street" or highway == "pedestrian" then
 		hwClass = 4
@@ -222,7 +222,7 @@ function setZOrder(is_rail, ignore_bridge)
 		hwClass = 3
 	elseif highway == "footway" or highway == "bridleway" or highway == "cycleway" or highway == "path" or highway == "track" then
 		hwClass = 2
-	elseif highway == "steps" or highway == "platform" then
+	elseif highway == "steps" then
 		hwClass = 1
 	end
 	zOrder = zOrder + hwClass
