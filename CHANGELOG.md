@@ -1,5 +1,21 @@
 # Changelog of the Tilemaker implementation of the Shortbread vector tile schema
 
+## 1.0.2 (2026-11-24)
+
+This version implements Shortbread schema version 1.0 and contains lots of bug fixes on top of implementation version 1.0.1.
+
+* Correct minimum zoom level of `water_lines_labels` in config.json (@oberhamsi, [b3a38d2](https://github.com/shortbread-tiles/shortbread-tilemaker/commit/b3a38d2ece6046c0185980f9791684fb493f4ad6), [#45](https://github.com/shortbread-tiles/shortbread-tilemaker/pull/45))
+* Use Visvalingam algorithm for simplification of some polygon layers. (@Nakaner, [d5b67f3](https://github.com/shortbread-tiles/shortbread-tilemaker/commit/d5b67f36eecbb408b7c033b512d3f6af665dcd63))
+* Remove `highway=road/platform` from Z-level calculation code (@Nakaner, [347b48a](https://github.com/shortbread-tiles/shortbread-tilemaker/commit/347b48ab16bb6a2da6b9829006e1e528ba7b5a06), issue [#23](https://github.com/shortbread-tiles/shortbread-tilemaker/issues/23))
+* Correct minimum zoom level for `highway=service` (@Nakaner, [a3e5189](https://github.com/shortbread-tiles/shortbread-tilemaker/commit/a3e5189ce70d035a9de45debcb27568373ee894a), issue [#22](https://github.com/shortbread-tiles/shortbread-tilemaker/issues/22))
+* Improve script `add_geometry_type.py`:
+  * Allow to update metadata instead of writing it to stdout (@Nakaner, [68fa605](https://github.com/shortbread-tiles/shortbread-tilemaker/commit/68fa60571569f3dbb46922709ad568d9312d5127))
+  * add support for MBTiles as input, remove deprecated argparse.FileType (@Nakaner, [ca22c9b](https://github.com/shortbread-tiles/shortbread-tilemaker/commit/ca22c9b5c65cacca74b6401876dc98c447336864))
+* Create label for `place=island` from areas (@oberhamsi, [#44](https://github.com/shortbread-tiles/shortbread-tilemaker/pull/44))
+* Handle exceptions thrown by Centroid() (@Nakaner, [1ae5c48](https://github.com/shortbread-tiles/shortbread-tilemaker/commit/1ae5c48949374a85bc17922a50db7273cb6bed25))
+* Fix wrong minzoom for water polygons and their labels (@Nakaner, [59abaaf](https://github.com/shortbread-tiles/shortbread-tilemaker/commit/59abaaf57fbb090a24c8f3513aa7cefed86271a5), issue [#50](https://github.com/shortbread-tiles/shortbread-tilemaker/issues/50))
+
+
 ## 1.0.1 (2026-09-22)
 
 This version implements Shortbread schema version 1.0 and contains lots of bug fixes on top of implementation version 1.0.0.
